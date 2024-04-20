@@ -732,7 +732,11 @@ public abstract class AbstractStargateEntity extends EnergyBlockEntity
 		engagedChevrons = Dialing.DEFAULT_CHEVRON_CONFIGURATION;
 		setStargateState(StargateConnection.State.IDLE, 0, updateInterfaces);
 	}
-	
+
+	/**
+	 * @param addressLength 6, 7 or 8
+	 * @return address of this stargate
+	 */
 	public Address getConnectionAddress(int addressLength)
 	{
 		ResourceKey<Level> dimension = this.level.dimension();
@@ -1132,7 +1136,10 @@ public abstract class AbstractStargateEntity extends EnergyBlockEntity
 		this.address = address;
 		this.setChanged();
 	}
-	
+
+	/**
+	 * @return currently encoded address
+	 */
 	public Address getAddress()
 	{
 		return this.address;
