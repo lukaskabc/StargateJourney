@@ -2,6 +2,7 @@ plugins {
     id 'eclipse'
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'org.spongepowered.mixin' version '0.7.+'
 }
 
 version = "${mod_version}"
@@ -170,6 +171,9 @@ dependencies {
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.19.3-44.1.0'
 
+    // Apply Mixin Annotation Processor
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
     // Real mod deobf dependency examples - these get remapped to your current mappings
     // implementation fg.deobf("com.tterrag.registrate:Registrate:MC${mc_version}-${registrate_version}") // Adds registrate as a dependency
 
@@ -191,12 +195,17 @@ dependencies {
     
 	compileOnly("cc.tweaked:cc-tweaked-${mc_version}-core-api:${cct_version}")
 	compileOnly(fg.deobf("cc.tweaked:cc-tweaked-${mc_version}-forge-api:${cct_version}"))
-    runtimeOnly(fg.deobf("cc.tweaked:cc-tweaked-${mc_version}-forge:${cct_version}"))
+    implementation(fg.deobf("cc.tweaked:cc-tweaked-${mc_version}-forge:${cct_version}"))
     
     runtimeOnly fg.deobf("curse.maven:botarium-704113:4416456")
     runtimeOnly fg.deobf("curse.maven:resourceful-lib-570073:4378849")
     runtimeOnly fg.deobf("curse.maven:resourceful-config-714059:4394154")
 	runtimeOnly fg.deobf("curse.maven:ad-astra-635042:4390126")
+}
+
+mixin {
+    add sourceSets.main, 'mixins.sgjourney.refmap.json'
+    config 'mixins.sgjourney.json'
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
