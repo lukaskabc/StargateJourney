@@ -1,21 +1,28 @@
 package net.povstalec.sgjourney.mixin.cctweaked;
 
 import dan200.computercraft.shared.turtle.core.TurtleBrain;
+import dan200.computercraft.shared.turtle.core.TurtleCommandQueueEntry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.povstalec.sgjourney.common.block_entities.stargate.AbstractStargateEntity;
 import net.povstalec.sgjourney.common.blocks.stargate.AbstractStargateBlock;
 import net.povstalec.sgjourney.common.blockstates.Orientation;
+import net.povstalec.sgjourney.common.compatibility.cctweaked.TurtleWormholeCommand;
 import net.povstalec.sgjourney.common.data.StargateNetwork;
 import net.povstalec.sgjourney.common.misc.CoordinateHelper;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.ArrayDeque;
 import java.util.List;
+import java.util.Queue;
 
 @Mixin(TurtleBrain.class)
 public abstract class TurtleBrainWormholeCompatibility {
@@ -25,32 +32,21 @@ public abstract class TurtleBrainWormholeCompatibility {
      */
     @Unique
     private boolean inTransit = false;
-    @Unique
-    private BlockPos originalPos = null;
 
-    /**
-     * Captures the original position
-     */
-    @Inject(at = @At(value = "HEAD"), method = "teleportTo", remap = false)
-    protected void teleportToBefore(Level level, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        if(level.isClientSide()) return;
-        if(inTransit) return;
+    @Final
+    @Shadow(remap = false)
+    private Queue<TurtleCommandQueueEntry> commandQueue;
 
-        TurtleBrain turtle = (TurtleBrain) (Object) this;
-
-        this.originalPos = turtle.getPosition();
-    }
-
-    @Inject(at = @At(value = "RETURN"), method = "teleportTo", remap = false, cancellable = true)
+    @Inject(at = @At(value = "HEAD"), method = "teleportTo", remap = false, cancellable = true)
     protected void teleportToAfter(Level level, BlockPos pos, CallbackInfoReturnable<Boolean> cir)
     {
-        if(level.isClientSide() || inTransit || originalPos == null) return;
+        if(level.isClientSide() || inTransit /*|| originalPos == null*/) return;
 
         TurtleBrain turtle = (TurtleBrain) (Object) this;
 
         if(!turtle.getLevel().equals(level)) return;
 
-        var moveVector = originalPos.getCenter().subtract(pos.getCenter());
+        var moveVector = turtle.getPosition().getCenter().subtract(pos.getCenter());
         if (moveVector.length() > 1) return; // not a normal move
         moveVector = moveVector.normalize();
 
@@ -118,7 +114,6 @@ public abstract class TurtleBrainWormholeCompatibility {
         if(destinationGate.getLevel() == null) return;
 
         inTransit = true;
-        boolean result = false;
         try {
             if (!gateEntity.getConnectionState().isDialingOut()) {
                 turtle.getLevel().removeBlock(turtle.getPosition(), false);
@@ -132,10 +127,9 @@ public abstract class TurtleBrainWormholeCompatibility {
 
             var yRot = CoordinateHelper.Relative.preserveYRot(gateEntity.getDirection(), destinationGate.getDirection(), turtle.getDirection().toYRot());
 
-            turtle.setDirection(Direction.fromYRot(yRot));
-            result = turtle.teleportTo(destinationGate.getLevel(), targetPos); // tp to destination
+            // as a very next command, enqueue the wormhole travel
+            ((ArrayDeque) commandQueue).offerFirst(new TurtleCommandQueueEntry(-1, new TurtleWormholeCommand((ServerLevel) level, targetPos, Direction.fromYRot(yRot))));
         } finally {
-            cir.setReturnValue(result); // mark as success
             inTransit = false;
         }
 
