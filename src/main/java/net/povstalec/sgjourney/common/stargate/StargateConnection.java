@@ -479,7 +479,15 @@ public final class StargateConnection
 	{
 		return this.doKawoosh;
 	}
-	
+
+	public AbstractStargateEntity getDialingStargate() {
+		return dialingStargate;
+	}
+
+	public AbstractStargateEntity getDialedStargate() {
+		return dialedStargate;
+	}
+
 	//============================================================================================
 	//*************************************Saving and Loading*************************************
 	//============================================================================================

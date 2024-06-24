@@ -7,7 +7,10 @@ import net.minecraft.world.level.Level;
 import net.povstalec.sgjourney.common.block_entities.stargate.AbstractStargateEntity;
 import net.povstalec.sgjourney.common.blocks.stargate.AbstractStargateBlock;
 import net.povstalec.sgjourney.common.blockstates.Orientation;
+import net.povstalec.sgjourney.common.data.StargateNetwork;
+import net.povstalec.sgjourney.common.misc.CoordinateHelper;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -17,17 +20,39 @@ import java.util.List;
 @Mixin(TurtleBrain.class)
 public abstract class TurtleBrainWormholeCompatibility {
 
+    /**
+     * True if the turtle is being transported by stargate
+     */
+    @Unique
+    private boolean inTransit = false;
+    @Unique
+    private BlockPos originalPos = null;
+
+    /**
+     * Captures the original position
+     */
     @Inject(at = @At(value = "HEAD"), method = "teleportTo", remap = false)
-    protected void teleportTo(Level world, BlockPos pos, CallbackInfoReturnable<Boolean> cir)
-    {
-        if(world.isClientSide()) return;
+    protected void teleportToBefore(Level level, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+        if(level.isClientSide()) return;
+        if(inTransit) return;
 
         TurtleBrain turtle = (TurtleBrain) (Object) this;
 
-        if(!turtle.getLevel().equals(world)) return;
+        this.originalPos = turtle.getPosition();
+    }
 
-        var moveVector = turtle.getPosition().getCenter().subtract(pos.getCenter()).normalize();
+    @Inject(at = @At(value = "RETURN"), method = "teleportTo", remap = false, cancellable = true)
+    protected void teleportToAfter(Level level, BlockPos pos, CallbackInfoReturnable<Boolean> cir)
+    {
+        if(level.isClientSide() || inTransit || originalPos == null) return;
+
+        TurtleBrain turtle = (TurtleBrain) (Object) this;
+
+        if(!turtle.getLevel().equals(level)) return;
+
+        var moveVector = originalPos.getCenter().subtract(pos.getCenter());
         if (moveVector.length() > 1) return; // not a normal move
+        moveVector = moveVector.normalize();
 
         // let's find out possible coords where stargate block could be
         // assuming that turtle can move only up, down, forward and back
@@ -42,13 +67,13 @@ public abstract class TurtleBrainWormholeCompatibility {
 
         for (var coord : candidates)
         {
-            var state = world.getBlockState(coord);
+            var state = level.getBlockState(coord);
             if (state == null || !(state.getBlock() instanceof AbstractStargateBlock)) continue;
 
-            var gateEntity = ((AbstractStargateBlock) state.getBlock()).getStargate(world, coord, state);
+            var gateEntity = ((AbstractStargateBlock) state.getBlock()).getStargate(level, coord, state);
 
             if (!gateEntity.isConnected() || gateEntity.getWormhole() == null) continue;
-            if (gateEntity.getCenterPos().distToCenterSqr(coord.getCenter()) > 8) continue;
+            if (gateEntity.getCenterPos().distToCenterSqr(pos.getCenter()) > 8) continue;
 
             if (gateEntity.getOrientation() == Orientation.DOWNWARD || gateEntity.getOrientation() == Orientation.UPWARD)
             {
@@ -57,8 +82,8 @@ public abstract class TurtleBrainWormholeCompatibility {
                     if ((gateEntity.getOrientation() == Orientation.DOWNWARD && moveVector.y < 0) ||
                             (gateEntity.getOrientation() == Orientation.UPWARD && moveVector.y > 0))
                     {
-                        wormholeTurtle(world, pos, turtle, gateEntity, cir);
-                    } // otherwise entering a gate from bad direction
+                        wormholeTurtle(level, pos, turtle, gateEntity, cir);
+                    } // otherwise, entering a gate from a bad direction
                     return;
                 }
                 continue;
@@ -72,23 +97,47 @@ public abstract class TurtleBrainWormholeCompatibility {
                         (gateEntity.getDirection() == Direction.WEST && moveVector.x < 0) ||
                         (gateEntity.getDirection() == Direction.EAST && moveVector.x > 0))
                 {
-                    wormholeTurtle(world, pos, turtle, gateEntity, cir);
+                    wormholeTurtle(level, pos, turtle, gateEntity, cir);
                 }
                 return;
             }
         }
     }
 
-    private void wormholeTurtle(Level world, BlockPos posInGate, TurtleBrain turtle, AbstractStargateEntity gateEntity, CallbackInfoReturnable<Boolean> cir)
+    @Unique
+    private void wormholeTurtle(Level level, BlockPos posInGate, TurtleBrain turtle, AbstractStargateEntity gateEntity, CallbackInfoReturnable<Boolean> cir)
     {
-        if (!gateEntity.getConnectionState().isDialingOut()) {
-            turtle.getLevel().removeBlock(turtle.getPosition(), false);
+        if (gateEntity.getConnectionID() == null)
             return;
+
+        var connection = StargateNetwork.get(level).getConnection(gateEntity.getConnectionID());
+        if (connection.isEmpty())
+            return;
+
+        var destinationGate = connection.get().getDialedStargate();
+        if(destinationGate.getLevel() == null) return;
+
+        inTransit = true;
+        boolean result = false;
+        try {
+            if (!gateEntity.getConnectionState().isDialingOut()) {
+                turtle.getLevel().removeBlock(turtle.getPosition(), false);
+                return;
+            }
+
+            var sourceVec = gateEntity.getCenter().vectorTo(posInGate.getCenter());
+            var translatedVec = CoordinateHelper.Relative.preserveRelative(gateEntity.getDirection(), gateEntity.getOrientation(), destinationGate.getDirection(), destinationGate.getOrientation(), sourceVec);
+            var targetVec = destinationGate.getCenter().add(translatedVec);
+            var targetPos = new BlockPos(targetVec);
+
+            var yRot = CoordinateHelper.Relative.preserveYRot(gateEntity.getDirection(), destinationGate.getDirection(), turtle.getDirection().toYRot());
+
+            turtle.setDirection(Direction.fromYRot(yRot));
+            result = turtle.teleportTo(destinationGate.getLevel(), targetPos); // tp to destination
+        } finally {
+            cir.setReturnValue(result); // mark as success
+            inTransit = false;
         }
-//        var targetGate = gateEntity.getConnectionAddress()
-        
-        var sourceVec = gateEntity.getCenter().subtract(posInGate.getCenter());
-//        var targetVec =
 
     }
 }

@@ -382,6 +382,10 @@ public final class StargateNetwork extends SavedData
 		
 		return false;
 	}
+
+	public Optional<StargateConnection> getConnection(String uuid) {
+		return Optional.ofNullable(this.connections.get(uuid));
+	}
 	
 	public final void terminateConnection(String uuid, Stargate.Feedback feedback)
 	{
