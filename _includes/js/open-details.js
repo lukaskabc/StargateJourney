@@ -1,5 +1,5 @@
 /**
- * Once the page is loaded, it will extract the fragment (part after {@code #}) from the url
+ * Once the page is loaded, it will extract the fragment from the url
  * and if it refers to a {@code details} or {@code summary} element, it will add {@code open} attribute
  * to the relevant {@code details} element.
  */
