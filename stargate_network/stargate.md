@@ -1,6 +1,6 @@
 ---
 title: Stargate
-nav_order: 20
+nav_order: 0
 has_children: false
 parent: Stargate Network
 ---

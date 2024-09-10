@@ -3,7 +3,7 @@
  * and if it refers to a {@code details} or {@code summary} element, it will add {@code open} attribute
  * to the relevant {@code details} element.
  */
-(() => {
+function onHashChange() {
     const fragment = window.location.hash.substring(1);
     if (fragment == null || fragment.trim() === "") return;
     const details = document.querySelectorAll("#" + fragment);
@@ -16,4 +16,8 @@
             el.setAttribute("open", "true");
         }
     })
-})();
+}
+
+document.addEventListener("DOMContentLoaded", onHashChange);
+document.addEventListener("hashchange", onHashChange);
+document.addEventListener("click", onHashChange);
