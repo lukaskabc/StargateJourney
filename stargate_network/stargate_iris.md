@@ -13,7 +13,7 @@ iris_types: [Naquadah Alloy, Steel, Copper, Iron, Golden, Diamond, Netherite, Br
 
 > The iris is a metal covering on the Earth Stargate which is used to screen incoming traffic.  
 > When the iris is closed, it forms a barrier less than three μm from the wormhole's event horizon, 
-> thereby preventing most forms of matter from properly reintegrating.
+> thereby preventing most forms of matter from properly reintegrating.  
 > Source: [stargate.fandom.com](https://stargate.fandom.com/wiki/Iris)
 
 Stargate is a gateway to other worlds, hiding many things to discover but also many dangers.
@@ -44,29 +44,37 @@ ___
 
 ## Crafting
 
-To craft an iris, you will need a Stargate shielding ring first
+You will need a Stargate shielding ring first to craft an iris, 
 which you can craft with four iron ingots and four redstone dusts.
 
 ![Stargate shielding ring recipe]({{ site.baseurl }}/assets/img/blocks/technological/iris/stargate_shielding_ring_recipe.png)
 
-Then you can use the ring in the middle of crafting table and surround it with a material for the [iris type](#iris-types).
+Then, you can use the ring in the middle of the crafting table 
+and surround it with a material for the [iris type](#iris-types).
 
 ![Stargate naquadah alloy iris]({{ site.baseurl }}/assets/img/blocks/technological/iris/stargate_iris_recipe.png)
 
 ## Setting up
 
 Once you have an iris, 
-you can install it into any stargate with **right-click** 
-(except for [Tollan Stargate]({{ site.baseurl }}/blocks/technological_blocks/#tollan) 
+you can install it into any Stargate with **right-click** 
+(except for [Tollan Stargate]({{ site.baseurl }}/blocks/technological_blocks/#tollan), 
 which is too thin for an iris installation).
 
-{: .warning }
-Make sure that all your stuff controlling the gate is in **the same chunk as the gate itself**.  
-Otherwise, when the remote chunk is loaded by an incoming connection to the gate, 
-anything **outside** the gate's chunk will not be loaded and so **won't work**.
-Also, **do not use pistons** in the redstone circuits, 
-when chunk is loaded by the gate, pistons and similar mechanics are not working.
+Only a single iris can be installed on the gate at the time.
+To remove the iris from the gate or replace it with another one,
+you must close and break it.
 
+## Controlling
+
+{: .warning }
+> Ensure all your stuff controlling the gate (the redstone circuit and related)
+> is in **the same chunk as the gate itself**.
+> Otherwise, when an incoming connection to the gate loads the remote chunk, anything **outside** the gate's chunk
+> will not be loaded, so that **it won't work**.
+> 
+> Also, **do not use pistons** in the redstone circuits. 
+> Pistons and similar mechanics will not work when the gate loads the chunk.
 
 ### Manual control
 
@@ -74,7 +82,7 @@ when chunk is loaded by the gate, pistons and similar mechanics are not working.
 In some future release, an option to control the iris with computers will be added
 
 Currently, it's only possible to control the iris with redstone, using the **basic interface**.  
-Additionally, you can use Garage Door Opener (GDO) to open iris remotely.
+Additionally, you can use a Garage Door Opener (GDO) to open the iris remotely.
 
 {: .warning }
 If you don't know redstone well, pay attention to each block and its direction, comparators and repeaters don't work both ways.
@@ -143,3 +151,4 @@ to the other side.
 For example, automatically opening the iris.
 
 [//]: # (![Iris with GDO]&#40;{{ site.baseurl }}/assets/img/mechanics/stargate_network/iris/auto_open_close.png&#41;)
+

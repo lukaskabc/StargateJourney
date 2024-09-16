@@ -20,4 +20,4 @@ function onHashChange() {
 
 document.addEventListener("DOMContentLoaded", onHashChange);
 document.addEventListener("hashchange", onHashChange);
-document.addEventListener("click", onHashChange);
+// document.addEventListener("click", onHashChange);

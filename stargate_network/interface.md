@@ -139,15 +139,11 @@ The interface in the wormhole mode provides a redstone signal when there is an a
 
 ___
 
-## Shielding mode
-![Interface shielding mode]({{ site.baseurl }}/assets/img/mechanics/stargate_network/interface/interface_mode_shielding.png)
+## Iris mode
+![Interface iris mode]({{ site.baseurl }}/assets/img/mechanics/stargate_network/interface/interface_mode_iris.png)
 
 {: .note }
 For shielding mode to work, you need to install [the iris]({{ site.baseurl }}/stargate_network/stargate_iris) in the Stargate first.
-
-{: .future }
-Currently the shielding mode is available only for the [basic interface]({{ site.baseurl }}/blocks/technological_blocks/#basic-interface).  
-Based on the community feedback, it will be also available for the crystal and advanced crystal interfaces.
 
 The interface in the shielding mode is able to provide and to accept a redstone signal for communication with the iris.
 
@@ -170,6 +166,14 @@ You can also provide the interface with a redstone signal controlling the iris.
 |   **8 - 15**    | Iris will open.                 |
 
 Example setup with iris and GDO is described on the iris page [Stargate Network / Stargate iris]({{ site.baseurl }}/stargate_network/stargate_iris/).
+
+<h2>Shielding mode <p class="label label-purple">Advanced Crystal Interface</p></h2>
+![Interface shielding mode]({{ site.baseurl }}/assets/img/mechanics/stargate_network/interface/interface_mode_shielding.png)
+
+Shielding mode is available only for the **advanced crystal interface**.
+Currently, this mode has no practical use.
+It is prepared for a future release when the energy shield is added to the mod.
+Then, this mode will be used to control the shield similarly to the iris.
 
 ___
 
