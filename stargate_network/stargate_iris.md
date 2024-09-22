@@ -171,8 +171,8 @@ ___
 
 So you have secured the gate with an auto-closing iris for incoming connection, but how you can open the iris
 when you are on the other side of the connection?  
-Garage Door Opener (GDO) is a hand-held device that allows to send a signal through the Stargate connection
-to the other side. 
+[Garage Door Opener (GDO)]({{ site.baseurl }}/items/functional/#garage-door-opener-gdo) is a hand-held device 
+that allows to send a signal through the Stargate connection to the other side.
 For example, automatically opening the iris.
 
 {: .warning }
@@ -188,10 +188,10 @@ For example, automatically opening the iris.
 
 **The following circuit will be discussed and explained.**  
 The circuit automatically closes iris on incoming connection.
-Opens the iris on receiving a correct code by the transceiver.
+Opens the iris on receiving a correct code by the [transceiver]({{ site.baseurl }}/blocks/technological_blocks/#transceiver).
 Automatically opens the iris on outgoing connection.
 Additionally, iris can be automatically opened when the gate is idle (there is no connection),
-more transceivers or iris control with a buttons or lever added.
+more [transceivers]({{ site.baseurl }}/blocks/technological_blocks/#transceiver) or iris control with a buttons or lever added.
 
 *All repeaters are set to delay 0 (default state), and all comparators all set to comparator mode (default state).*
 
@@ -199,7 +199,7 @@ more transceivers or iris control with a buttons or lever added.
 - 12 blocks
 - 2 stargate interfaces (any type)
 - 3 redstone comparators
-- 1 transceiver
+- 1 [transceiver]({{ site.baseurl }}/blocks/technological_blocks/#transceiver)
 - 4 redstone torches
 - 6 redstone dusts
 
@@ -213,7 +213,7 @@ The top/left one closes and the bottom/right one opens the iris.
 ![Iris setup with GDO with auto open]({{ site.baseurl }}/assets/img/mechanics/stargate_network/iris/gdo_breakdown/iris_with_gdo_auto_open.png)
 
 ### Circuit breakdown
-So, how the circuit with GDO works.  
+So, how the circuit with [GDO]({{ site.baseurl }}/items/functional/#garage-door-opener-gdo) works.  
 
 As explained in the [automatic iris closing section]({{ site.baseurl }}/stargate_network/stargate_iris/#automatic-iris-closing),
 the interface on the left in the [wormhole mode]({{ site.baseurl }}/stargate_network/interface/#wormhole-mode) 
@@ -224,7 +224,7 @@ on the right.
 - **7** -- When there is an **incoming** connection, resulting in **closing** the iris by the interface on the right.
 - **15** -- When there is an **outgoing** connection, resulting in **opening** the iris by the interface on the right. 
 
-Next, we need to add the control of the iris with the transceiver.
+Next, we need to add the control of the iris with the [transceiver]({{ site.baseurl }}/blocks/technological_blocks/#transceiver).
 
 ![Iris setup with GDO interface highlight]({{ site.baseurl }}/assets/img/mechanics/stargate_network/iris/gdo_breakdown/iris_with_gdo_interfaces.png)
 
@@ -251,8 +251,8 @@ So, when we want the iris to open, we need to bring a redstone pulse to the reds
 ![Iris setup with GDO RS NOR latch highlight with output]({{ site.baseurl }}/assets/img/mechanics/stargate_network/iris/gdo_breakdown/iris_with_gdo_rsnorlatch_output.png)
 
 *Thats easy, isn't it?*  
-All we need to do is add the transceiver powering the redstone dust behind the torch **A**.
-Now whethever the transceiver receives a valid code, it will emit a single pulse via the comparator.
+All we need to do is add the [transceiver]({{ site.baseurl }}/blocks/technological_blocks/#transceiver) powering the redstone dust behind the torch **A**.
+Now whethever the [transceiver]({{ site.baseurl }}/blocks/technological_blocks/#transceiver) receives a valid code, it will emit a single pulse via the comparator.
 A single pulse is enough to switch the [RS NOR Latch](https://minecraft.wiki/w/Redstone_circuits/Memory#RS-NOR_latches)
 to the state when the torch **A** is inactive and torch **B** is active.
 This will activate the torch under the interface and instruct the iris to open.
@@ -292,11 +292,12 @@ leaving the comparator between interfaces to instruct
 the iris based on the connection type (open for outgoing, close for incoming).
 The second comparator reading from the interface in the 
 [wormhole mode]({{ site.baseurl }}/stargate_network/interface/#wormhole-mode) disables the torch resetting the latch,
-allowing it to be switched to the other state by the transceiver (to open the iris when requested).
+allowing it to be switched to the other state by the [transceiver]({{ site.baseurl }}/blocks/technological_blocks/#transceiver) 
+(to open the iris when requested).
 
 ![Iris setup with GDO active connection]({{ site.baseurl }}/assets/img/mechanics/stargate_network/iris/gdo_breakdown/iris_with_gdo_active_connection.png)
 
-When the transceiver receives the correct code, it will send a pulse to the latch, switching it to the other state.
+When the [transceiver]({{ site.baseurl }}/blocks/technological_blocks/#transceiver) receives the correct code, it will send a pulse to the latch, switching it to the other state.
 That will activate the torch below the interface instructing the iris to open.
 
 ![Iris setup with GDO open iris]({{ site.baseurl }}/assets/img/mechanics/stargate_network/iris/gdo_breakdown/iris_with_gdo_open_iris.png)
@@ -315,8 +316,8 @@ the block below the torch below the interface in the [iris mode]({{ site.baseurl
 The comparator between the interfaces is powered from the side with a repeater,
 and the interface in the [iris mode]({{ site.baseurl }}/stargate_network/interface/#iris-mode) is powered directly with dust (to keep the signal level low).
 The comparator between the interfaces is set to subtracting mode.
-The lever will also override the GDO signal.
-In case you do not want the lever to override the GDO signal,
+The lever will also override the [GDO]({{ site.baseurl }}/items/functional/#garage-door-opener-gdo) signal.
+In case you do not want the lever to override the [GDO]({{ site.baseurl }}/items/functional/#garage-door-opener-gdo) signal,
 simply remove the repeater powering the torch under the interface in the [iris mode]({{ site.baseurl }}/stargate_network/interface/#iris-mode).
 
 
