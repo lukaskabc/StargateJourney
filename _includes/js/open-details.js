@@ -1,3 +1,4 @@
+// TODO: this definitely needs some tweaks, it does not work as intended
 /**
  * Once the page is loaded, it will extract the fragment from the url
  * and if it refers to a {@code details} or {@code summary} element, it will add {@code open} attribute
