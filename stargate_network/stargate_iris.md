@@ -87,11 +87,7 @@ ___
 ___
 
 ### Manual control
-
-{: .future }
-In some future release, an option to control the iris with computers will be added
-
-Currently, it's only possible to control the iris with redstone, using the **basic interface**.  
+The iris can be controlled with a [Stargate interface]({{ site.baseurl }}/stargate_network/interface/) with redstone or computers.
 Additionally, you can use a Garage Door Opener (GDO) to open the iris remotely.
 
 {: .warning }
