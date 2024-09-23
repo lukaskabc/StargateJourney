@@ -4,68 +4,58 @@ nav_order: 70
 has_children: true
 ---
 
-{: .note }
-This content was migrated from the old wiki and is awaiting an update.
-
 1. Table of Contents
 {:toc}
 
 # Stargate Network
+Stargate Network is a complex system that allows Stargates to communicate and establish wormhole connections between each other. Each Stargate has up to three specific addresses that allow other Stargates to dial itself. Stargate Network also is responsible for choosing the optimal Stargate whenever a Solar System is dialed.
 
-# Addresses
+## Addresses
+There are 3 kinds of addresses the Stargates may have. Each of them serve different purposes, commonly distinguished by their length:
+* `7-Symbol address`, also called "Solar System address", is an address used to dial a particular Solar System. This means the Stargate Network will pick the most suitable Stargate to route the incoming connection within the Solar System. Keep in mind that 7-Symbol addresses work only inside of the same galaxy, with only exception being if the given Solar System is a part of two Galaxies simultaneously.
+* `8-Symbol addresses`, also called "Extragalactic Solar System address", is also an address used to dial Solar Systems, however 8-Symbol addresses allow for intergalactic connections, unlike 7-Symbol addresses.
+* `9-chevron Addresses` is not an address allocated to a certain area of space like Solar Systems, but instead a unique ID of each existing Stargate. This type of address can be used to dial a specific Stargate, no matter how far or where it is located.
+*Note: 7 and 8-Symbol addresses can and will change depending on the Stargate's location (Depending on which Solar System it is in), but a 9-Symbol address of a Stargate always remains the same.*
 
-There are 3 kinds of Addresses:
-* `7-chevron Addresses` can be used to dial a Solar System inside the same galaxy. If a Solar System is a part of multiple Galaxies, it can have a different 7-chevron Address in each Galaxy.
-* `8-chevron Addresses` can be used to dial any Solar System. Each Solar System has only one 8-chevron Address.
-* `9-chevron Addresses` can be used to dial specific Stargates. Each Stargate has a unique 9-chevron Address, which can be used to dial it anywhere, even when it's moved to another Solar System where its 7 and 8-chevron Address changes.
-
-## Preferred Stargates
-When dialing a Solar System with 7-chevron or 8-chevron Addresses, there may be more than one Stargate in said Solar System. The Stargate Network will choose a Preferred Stargate based on the following criteria in this order of importance:
-1. Has DHD - It is important that the traveler can come back easily, this means the Preferred Stargate should have a functional DHD.
-2. Stargate Generation - It is preferable for the Stargate to be of a newer generation. As such, the 3rd Generation Pegasus Stargates will be chosen over the 2nd Generation Milky Way Stargates and Milky Way Stargates will be chosen over the 1st Generation Universe Stargates.
-3. Number of times used - If one Stargate has been used more times than another, it is very likely that travelers will wish to continue using it over the less used Stargate.
+## Preferred Stargate
+When a Stargate dials a Solar System, the Stargate Network will scan through the list of all available Stargates within given Solar System, and choose one to recieve the connection. It does so according to the three priorities it has, ordered in decrease of their importance. Higher priority will override lower priority:
+1. Presence of a DHD - Due to high importance of any traveler having the ability to return, this priority is the top one.
+2. Stargate Generation - Stargate Network will choose higher generation Stargates over lower ones, as higher generation most likely means they are more reliable and easy to use.
+3. Total connection count - The Network will prioritise Stargates that have a higher number of total connections, because that means the given Stargate must be more reliable as it is used much more than others.
 
 ## Getting an Address
-To get an Address of a Dimension, simply use one of the following commands:
-* `/sgjourney stargateNetwork address` to get the 7-chevron Address of a Dimension in the current Galaxy.
-* `/sgjourney stargateNetwork extragalacticAddress` to get the 8-chevron Address of a Dimension anywhere.
-* Find a **Naturally Generated** Cartouche.
-> Cartouches have Cartouche Tables similar to Chests with Loot Tables. You don't expect Chests you crafted yourself to have any Loot and just like that, Cartouches you place yourself won't have any interesting Addresses and will default to the Addresss of the Dimensions you've placed them in.
-* Give yourself a Cartouche with a Cartouche Table through commands, for example: `/give @p sjgourney:sandstone_cartouche{BlockEntityTag:{AddressTable:"sgjourney:cartouche_buried_gate"}}`
-> You can take a look at the [Cartouche Tables](https://github.com/Povstalec/StargateJourney/tree/main/src/main/resources/data/sgjourney/sgjourney/address_table) currently in the mod
+At the time of writing this part of the wiki, there are currently no ways to obtain specific 7 and 8-Symbol addresses in survival without using commands, but be aware that they are planned and will eventually be added.
+To get an address of a Dimension, there exists two commands:
+* `/sgjourney stargateNetwork address` is used to get a 7-Symbol address of a Dimension in the current Galaxy.
+* `/sgjourney stargateNetwork extragalacticAddress` is used to get a 8-Symbol address of a Dimension.
+In survival, you can find a **Naturally Generated** Cartouche on planets like Abydos and Chulak. They contain a 7-Symbol address of a random Solar System.
+> Cartouches have defined Cartouche Tables similar to Chests with Loot Tables. Made Cartouches that don't have any predefined table will will default to the 7-Symbol addresss of the Dimensions they are placed in.
+* You can give yourself a Cartouche with a specific Cartouche Table already set with usage of commands, for example: `/give @p sjgourney:sandstone_cartouche{BlockEntityTag:{AddressTable:"sgjourney:cartouche_buried_gate"}}`
+> You can take a look at the [Cartouche Tables](https://github.com/Povstalec/StargateJourney/tree/main/src/main/resources/data/sgjourney/sgjourney/address_table) that are currently in the mod.
 
 # Connections
-Estabilishing different connections requires energy (currently disabled by default, can be enabled in the config) and each type of connection has a different energy cost. There are 3 kinds of Connections you can estabilish when using a Stargate:
-* `System-wide connection` is a connection between two Stargates which are either in the same Dimension, or in two Dimensions which are both part of the same Solar System
-* The only way to estabilish a System-wide connection is through a 9-chevron Address
-* Default energy cost of the connection is 50 000 FE.
-* Address will always take the form of -A-B-C-D-E-F-G-H-
-> * An example of this would be using a Stargate that's on Abydos to dial another Stargate on Abydos
-> * (Example Address: -32-14-5-19-6-18-31-35)
+Estabilishing a wormhole connection between two Stargates requires energy (Currently disabled by default, can be enabled in the mod's config), and each type of connection has a different energy cost. There are 3 kinds of connections you can estabilish when using a Stargate:
+* `System-wide connection` is a connection between two Stargates which are either in the same Dimension, or in two Dimensions which are both part of the same Solar System.
+> The only way to estabilish a System-wide connection is through usage of a 9-chevron Address, as the Stargate Network will not allow a Stargate to dial the same Solar System it's located in.
+> Default energy cost of the connection is 50 000 FE.
 
-* `Interstellar connection` is a connection between two Stargates in the same Galaxy
-* A connection can be estabilished with either an 7-chevron, 8-chevron or a 9-chevron Address
-* Default energy cost of the connection is 100 000 FE
-* Address can take the form of -A-B-C-D-E-F-G-H-,  -A-B-C-D-E-F-G- or  -A-B-C-D-E-F-
-> * An example of this would be dialing Abydos from Earth
-> * (Example Address: -26-6-14-31-11-29-)
+* `Interstellar connection` is a connection between two Stargates located in different Solar Systems but within the same Galaxy.
+> An Interstellar connection can be estabilished with either 7-Symbol, 8-Symbol or a 9-Symbol address.
+> Default energy cost of the connection is 100 000 FE.
 
-* `Intergalctic connection` is a connection between two Stargates in different Galaxies, or with a Stargate located outside of any Galaxy
-* A connection can be estabilished with an 8-chevron or a 9-chevron Address
-* Default energy cost of the connection is 100 000 000 000 FE
-* Address can take a form that looks like this -A-B-C-D-E-F-G- or this -A-B-C-D-E-F-G-H-
-> * An example of this would be dialing Lantea from Earth
-> * (Example Address: -18-20-1-15-14-7-19-)
+* `Intergalctic connection` is a connection between two Stargates located in different Galaxies, or with a Stargate located outside of any Galaxy.
+> A connection can be estabilished with usage only of 8-Symbol or 9-Symbol addresses.
+> Default energy cost of the connection is 100 000 000 000 FE.
 
 # Stellar Update
-Stellar updates are essentially updates to the Stargate Network which ensure the Stargate Network works properly. During a Stellar update, all Stargates are disconnected and the Stargate Network is regenerated from scratch, including any changes to the world. For instance, if you were to add a new Dimension to your World, the Dimension would not be registered by the Stargate Network until the next Stellar Update.
+Stellar updates are essentially updates to the Stargate Network which ensure the Stargate Network works properly. During a Stellar update, all Stargates are disconnected and the Stargate Network is regenerated from scratch, including any changes to the world. For instance, if you were to add a new Dimension to your world, the Dimension would not be registered by the Stargate Network until the next Stellar Update.
 * A Stellar Update can be activated in multiple ways:
-1. Stargate Network update (newer versions of the mod have updates to the Stargate Network)
-2. Running the **/sgjourney stargateNetwork forceStellarUpdate** command
-3. Outside of the game by deleting the `sgjourney-stargate_network` file from the World's `data` folder
+1. Stargate Network update (If the world has been loaded with a version of Stargate Journey that features a newer version of Stargate Network, it will automatically commence Stellar Update)
+2. Running the `/sgjourney stargateNetwork forceStellarUpdate` command.
+3. Outside of the game by deleting the `sgjourney-stargate_network` file from the world's `data` folder.
 
 # Versions
-Stargate Network has gone through multiple versions, each with slightly different mechanics.
+Stargate Network has gone through multiple versions, growing in complexity and featuring different mechanics.
 
 ## Version 0
 * **First used in:** `Stargate Journey 0.4.0`
@@ -76,6 +66,7 @@ Stargate Network has gone through multiple versions, each with slightly differen
 * **First used in:** `Stargate Journey 0.5.2`
 * **Last used in:** `Stargate Journey 0.5.4`
 * Changes:
+> * TBD
 
 ### Version 2
 * **First used in:** `Stargate Journey 0.6.0`
@@ -94,6 +85,8 @@ Stargate Network has gone through multiple versions, each with slightly differen
 ### Version 4
 * **First used in:** `Stargate Journey 0.6.3`
 * **Last used in:** `Stargate Journey 0.6.5`
+* * Changes:
+> * TBD
 
 ### Version 5
 * **First used in:** `Stargate Journey 0.6.6`
@@ -101,6 +94,7 @@ Stargate Network has gone through multiple versions, each with slightly differen
 > * Dialed Stargates now lock Chevrons one by one until a wormhole is formed
 
 ### Version 6
+* TBD
 
 ### Version 7
 * **First used in:** `Stargate Journey 0.6.10`
