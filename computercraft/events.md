@@ -2,9 +2,8 @@
 title: Events
 nav_order: 50
 parent: Computercraft
+custom_css: "/assets/css/computercraft.css"
 ---
-
-{% include computercraft_doc.html %}
 
 # Events
 {: .no_toc }
@@ -67,9 +66,11 @@ end
 ## Stargate interface
 The computer will receive these events whenever an interface is connected to a Stargate and the computer.
 
-<h3 class="h-function">
+### Chevron engaged
+<div class="h-function">
     <code>stargate_chevron_engaged</code>
-</h3>
+    <a class="source" target="_blank" href="https://github.com/Povstalec/StargateJourney/blob/b5d8f1b0c5817ba96f363f1bf926c580f740b299/src/main/java/net/povstalec/sgjourney/common/block_entities/stargate/AbstractStargateEntity.java#L82">source</a>
+</div>
 
 Fired whenever a **chevron** is engaged.
 
@@ -87,12 +88,29 @@ Fired whenever a **chevron** is engaged.
 
 ___
 
-<h3 class="h-function">
+### Incoming Connection
+<div class="h-function">
+    <code>stargate_incoming_connection</code>
+    <a class="source" target="_blank" href="https://github.com/Povstalec/StargateJourney/blob/b5d8f1b0c5817ba96f363f1bf926c580f740b299/src/main/java/net/povstalec/sgjourney/common/sgjourney/StargateConnection.java#L26">source</a>
+</div>
+
+Fired on an incoming connection right before the first chevron is engaged.
+
+**Return values**
+1. `string` The event name (`stargate_chevron_engaged`)
+2. `string` The peripheral name
+
+___
+
+### Incoming wormhole
+<div class="h-function">
     <code>stargate_incoming_wormhole</code>
-</h3>
+    <a class="source" target="_blank" href="https://github.com/Povstalec/StargateJourney/blob/b5d8f1b0c5817ba96f363f1bf926c580f740b299/src/main/java/net/povstalec/sgjourney/common/sgjourney/StargateConnection.java#L27">source</a>
+</div>
 
 Fired whenever an **incoming** wormhole forms.
-The event is fired right **after** the kawoosh end.
+The event is fired right **before** the kawoosh starts.
+To check when the kawoosh ends and the wormhole is fully formed, see [`isWormholeOpen()`]({{ '/computercraft/stargate-interface/#isWormholeOpen' | absolute_url }}) method.
 
 **Return values**
 1. `string` The event name (`stargate_incoming_wormhole`)
@@ -101,12 +119,16 @@ The event is fired right **after** the kawoosh end.
 
 ___
 
-<h3 class="h-function">
+### Outgoing wormhole
+
+<div class="h-function">
     <code>stargate_outgoing_wormhole</code>
-</h3>
+    <a class="source" target="_blank" href="https://github.com/Povstalec/StargateJourney/blob/b5d8f1b0c5817ba96f363f1bf926c580f740b299/src/main/java/net/povstalec/sgjourney/common/sgjourney/StargateConnection.java#L28">source</a>
+</div>
 
 Fired whenever an outgoing Wormhole forms.
-The event is fired right **before** the kawoosh start.
+The event is fired right **before** the kawoosh starts.
+To check when the kawoosh ends and the wormhole is fully formed, see [`isWormholeOpen()`]({{ '/computercraft/stargate-interface/#isWormholeOpen' | absolute_url }}) method.
 
 **Return values**
 1. `string` The event name (`stargate_outgoing_wormhole`)
@@ -115,9 +137,12 @@ The event is fired right **before** the kawoosh start.
 
 ___
 
-<h3 class="h-function">
+### Disconnected
+
+<div class="h-function">
     <code>stargate_disconnected</code>
-</h3>
+    <a class="source" target="_blank" href="https://github.com/Povstalec/StargateJourney/blob/b5d8f1b0c5817ba96f363f1bf926c580f740b299/src/main/java/net/povstalec/sgjourney/common/sgjourney/StargateConnection.java#L29">source</a>
+</div>
 
 Fired whenever a connection is ended.
 
@@ -129,12 +154,16 @@ Fired whenever a connection is ended.
 
 ___
 
-<h3 class="h-function">
+### Reset
+
+<div class="h-function">
     <code>stargate_reset</code>
-</h3>
+    <a class="source" target="_blank" href="https://github.com/Povstalec/StargateJourney/blob/b5d8f1b0c5817ba96f363f1bf926c580f740b299/src/main/java/net/povstalec/sgjourney/common/block_entities/stargate/AbstractStargateEntity.java#L83">source</a>
+</div>
 
 Fired whenever a Stargate resets.
-<!-- TODO: link explaining when a stargate resets -->
+
+[//]: # (TODO: link explaining when a stargate resets)
 
 **Return values**
 1. `string` The event name (`stargate_reset`)
@@ -144,9 +173,12 @@ Fired whenever a Stargate resets.
 
 ___
 
-<h3 class="h-function">
+### Deconstructing entity
+
+<div class="h-function">
     <code>stargate_deconstructing_entity</code>
-</h3>
+    <a class="source" target="_blank" href="https://github.com/Povstalec/StargateJourney/blob/b5d8f1b0c5817ba96f363f1bf926c580f740b299/src/main/java/net/povstalec/sgjourney/common/sgjourney/Wormhole.java#L45">source</a>
+</div>
 
 Fired whenever an entity enters the wormhole.
 
@@ -160,9 +192,12 @@ Fired whenever an entity enters the wormhole.
 
 ___
 
-<h3 class="h-function">
+### Reconstructing entity
+
+<div class="h-function">
     <code>stargate_reconstructing_entity</code>
-</h3>
+    <a class="source" target="_blank" href="https://github.com/Povstalec/StargateJourney/blob/b5d8f1b0c5817ba96f363f1bf926c580f740b299/src/main/java/net/povstalec/sgjourney/common/sgjourney/Wormhole.java#L46">source</a>
+</div>
 
 Fired whenever an entity exits the wormhole.
 
@@ -175,9 +210,12 @@ Fired whenever an entity exits the wormhole.
 
 ___
 
-<h3 class="h-function">
+### Message received
+
+<div class="h-function">
     <code>stargate_message_received</code>
-</h3>
+    <a class="source" target="_blank" href="https://github.com/Povstalec/StargateJourney/blob/b5d8f1b0c5817ba96f363f1bf926c580f740b299/src/main/java/net/povstalec/sgjourney/common/block_entities/stargate/AbstractStargateEntity.java#L84">source</a>
+</div>
 
 Fired whenever a Stargate receives a message sent by the `sendStargateMessage(message)` function
 
@@ -187,7 +225,7 @@ Fired whenever a Stargate receives a message sent by the `sendStargateMessage(me
 3. `string` The message that was sent from an interface connected to the Stargate on the other end of the connection.
 
 **See also**
-- [sendStargateMessage(message)]({{ site.baseurl }}/computercraft/stargate_interface/#sendStargateMessage)
+- [sendStargateMessage(message)]({{ '/computercraft/stargate-interface/#sendStargateMessage' | absolute_url }})
 
 ___
 
@@ -196,9 +234,12 @@ The computer will receiver these events whenever a [transceiver]({{ site.baseurl
 
 ___
 
-<h3 class="h-function">
+### Transmission received
+
+<div class="h-function">
     <code>transceiver_transmission_received</code>
-</h3>
+    <a class="source" target="_blank" href="https://github.com/Povstalec/StargateJourney/blob/b5d8f1b0c5817ba96f363f1bf926c580f740b299/src/main/java/net/povstalec/sgjourney/common/block_entities/tech/TransceiverEntity.java#L35">source</a>
+</div>
 
 Fired whenever the [transceiver]({{ site.baseurl }}/computercraft/transceiver/) receives a transmission on the configured frequency.
 
