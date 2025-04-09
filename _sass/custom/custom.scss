@@ -1,4 +1,10 @@
+@import "./layout";
+@import "./layout_utils";
+@import "./right-bar";
+@import "./mcui";
+
 .site-title {
+  // lower the padding to give more space for the logo
   padding-left: 0.75rem;
   padding-right: 0.75rem;
 }
@@ -6,6 +12,14 @@
 .site-title .site-logo {
   width: auto;
   flex-grow: 1;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.max-width-768 {
+  max-width: 768px;
 }
 
 .max-width-512 {
@@ -31,6 +45,19 @@ details {
 
 .flex-align-items-center {
   align-items: center;
+}
+
+code {
+  text-wrap: nowrap;
+}
+
+img.inline-item {
+  max-height: 16px;
+  vertical-align: text-bottom;
+}
+
+.pixel-image {
+  image-rendering: pixelated;
 }
 
 // located in /assets/css

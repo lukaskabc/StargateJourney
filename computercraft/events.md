@@ -2,9 +2,9 @@
 title: Events
 nav_order: 50
 parent: Computercraft
+custom_css: "/assets/css/computercraft.css"
+# custom_js: "/assets/js/computercraft.js"
 ---
-
-{% include computercraft_doc.html %}
 
 # Events
 {: .no_toc }
@@ -187,7 +187,7 @@ Fired whenever a Stargate receives a message sent by the `sendStargateMessage(me
 3. `string` The message that was sent from an interface connected to the Stargate on the other end of the connection.
 
 **See also**
-- [sendStargateMessage(message)]({{ site.baseurl }}/computercraft/stargate_interface/#sendStargateMessage)
+- [sendStargateMessage(message)]({{ '/computercraft/stargate-interface/#sendStargateMessage' | absolute_url }})
 
 ___
 
