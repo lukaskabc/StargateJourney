@@ -1,8 +1,8 @@
 ---
 title: Computercraft
-nav_order: 90
+nav_order: 130
 ---
 
-# [Stargate interface]({{ site.baseurl }}/computercraft/stargate_interface)
+# [Stargate interface]({{ '/computercraft/stargate_interface' | absolute_url }})
 
 # [Events]({{ site.baseurl }}/computercraft/events)
