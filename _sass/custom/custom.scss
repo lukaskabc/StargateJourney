@@ -1,4 +1,10 @@
+@import "./layout";
+@import "./layout_utils";
+@import "./right-bar";
+
+
 .site-title {
+  // lower the padding to give more space for the logo
   padding-left: 0.75rem;
   padding-right: 0.75rem;
 }
