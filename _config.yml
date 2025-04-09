@@ -21,6 +21,10 @@ permalink: pretty
 
 color_scheme: night
 
+safe: false
+plugins:
+  - jekyll-toc
+
 # Enable or disable the site search
 # Supports true (default) or false
 search_enabled: true
@@ -118,3 +122,4 @@ exclude:
   - .gradle/
   - .bundle/
   - build/
+  - implementation_branch/
