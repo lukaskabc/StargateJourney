@@ -17,6 +17,11 @@ import net.povstalec.sgjourney.common.block_entities.tech.AbstractCrystallizerEn
 import net.povstalec.sgjourney.common.init.BlockInit;
 import net.povstalec.sgjourney.common.init.MenuInit;
 
+import static net.povstalec.sgjourney.common.init.FluidInit.HEAVY_LIQUID_NAQUADAH_SOURCE;
+import static net.povstalec.sgjourney.common.init.FluidInit.LIQUID_NAQUADAH_SOURCE;
+import static net.povstalec.sgjourney.common.init.ItemInit.HEAVY_LIQUID_NAQUADAH_BUCKET;
+import static net.povstalec.sgjourney.common.init.ItemInit.LIQUID_NAQUADAH_BUCKET;
+
 public class CrystallizerMenu extends AbstractContainerMenu
 {
     protected final AbstractCrystallizerEntity blockEntity;
@@ -120,6 +125,16 @@ public class CrystallizerMenu extends AbstractContainerMenu
     // THIS YOU HAVE TO DEFINE!
     private static final int TE_INVENTORY_SLOT_COUNT = 5;  // must match TileEntityInventoryBasic.NUMBER_OF_SLOTS
 
+    /**
+     * Checks if the ItemStack has the required liquid for the liquidizer.
+     * @return true if the ItemStack has the required liquid, false otherwise.
+     */
+    private boolean hasRequiredLiquid(ItemStack itemStack) {
+        return itemStack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).map(cap ->
+                cap.getFluidInTank(0).getFluid().isSame(blockEntity.getDesiredFluid())
+        ).orElse(false);
+    }
+
     @Override
     public ItemStack quickMoveStack(Player playerIn, int index) 
     {
@@ -127,13 +142,25 @@ public class CrystallizerMenu extends AbstractContainerMenu
         if (sourceSlot == null || !sourceSlot.hasItem()) return ItemStack.EMPTY;  //EMPTY_ITEM
         ItemStack sourceStack = sourceSlot.getItem();
         ItemStack copyOfSourceStack = sourceStack.copy();
+        boolean stopQuickMove = false;
 
         // Check if the slot clicked is one of the vanilla container slots
         if (index < VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT) 
         {
             // This is a vanilla container slot so merge the stack into the tile inventory
-            if (!moveItemStackTo(sourceStack, TE_INVENTORY_FIRST_SLOT_INDEX, TE_INVENTORY_FIRST_SLOT_INDEX
-                    + TE_INVENTORY_SLOT_COUNT, false)) 
+
+            // in context of machine, we don't want to overflow to the next slot
+            stopQuickMove = true;
+
+            // try to move it to the bucket slot first if it has the required liquid
+            if(hasRequiredLiquid(sourceStack))
+            {
+                moveItemStackTo(sourceStack, TE_INVENTORY_FIRST_SLOT_INDEX + 4, TE_INVENTORY_FIRST_SLOT_INDEX + 5, false);
+                // we are trying a single slot which might fail
+            }
+
+            if (!moveItemStackTo(sourceStack, TE_INVENTORY_FIRST_SLOT_INDEX,
+                    TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT, false))
             {
                 return ItemStack.EMPTY;  // EMPTY_ITEM
             }
@@ -159,6 +186,10 @@ public class CrystallizerMenu extends AbstractContainerMenu
             sourceSlot.setChanged();
         }
         sourceSlot.onTake(playerIn, sourceStack);
+        if (stopQuickMove) {
+            // Do not "overflow" to the next slot
+            return ItemStack.EMPTY;
+        }
         return copyOfSourceStack;
     }
 	
