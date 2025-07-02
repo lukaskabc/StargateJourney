@@ -18,7 +18,5 @@ If you want to feel like you're actually travelling across the galaxy, check out
 
 ## Video
 <p align="center">
-    <a href="https://youtu.be/ci1Q47NKSCM" target="_blank">
-        <img alt="Youtube video preview" src="https://img.youtube.com/vi/ci1Q47NKSCM/0.jpg" />
-    </a>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/ci1Q47NKSCM?si=FdoLBLi1EuEC-Rgg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </p>
