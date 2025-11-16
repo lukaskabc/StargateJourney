@@ -5,6 +5,8 @@ import java.util.Objects;
 
 public class TransporterID
 {
+	public static byte FULL_ID_LENGTH = 9;
+	
 	protected int[] idArray;
 	
 	public TransporterID(int... idArray)

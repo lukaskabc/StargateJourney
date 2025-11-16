@@ -1,8 +1,7 @@
 package net.povstalec.sgjourney.common.block_entities;
 
 import net.minecraft.core.HolderLookup;
-import net.minecraft.server.level.ServerLevel;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +14,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.povstalec.sgjourney.StargateJourney;
 import net.povstalec.sgjourney.common.data.Universe;
 import net.povstalec.sgjourney.common.init.BlockEntityInit;
-import net.povstalec.sgjourney.common.packets.ClientboundSymbolUpdatePacket;
 
 public abstract class SymbolBlockEntity extends BlockEntity
 {
@@ -86,6 +84,22 @@ public abstract class SymbolBlockEntity extends BlockEntity
 		this.isNew = true;
 	}
 	
+	@Override
+	public ClientboundBlockEntityDataPacket getUpdatePacket()
+	{
+		return ClientboundBlockEntityDataPacket.create(this);
+	}
+	
+	@Override
+	public CompoundTag getUpdateTag(HolderLookup.Provider registries)
+	{
+		return this.saveWithoutMetadata(registries);
+	}
+	
+	//============================================================================================
+	//************************************Getters and setters*************************************
+	//============================================================================================
+	
 	public int getSymbolNumber()
 	{
 		return this.symbolNumber;
@@ -116,14 +130,6 @@ public abstract class SymbolBlockEntity extends BlockEntity
 	{
 		return this.symbols;
 	}
-	
-	public void tick(Level level, BlockPos pos, BlockState state)
-	{
-		if(level.isClientSide())
-			return;
-		PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, level.getChunkAt(this.worldPosition).getPos(), new ClientboundSymbolUpdatePacket(worldPosition, symbolNumber, pointOfOrigin, symbols));
-	}
-	
 	
 	
 	public static class Stone extends SymbolBlockEntity

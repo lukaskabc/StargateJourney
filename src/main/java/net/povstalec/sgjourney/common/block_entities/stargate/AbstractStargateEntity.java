@@ -6,6 +6,8 @@ import javax.annotation.Nullable;
 
 import net.minecraft.core.*;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.WorldGenLevel;
@@ -66,8 +68,6 @@ import net.povstalec.sgjourney.common.init.StatisticsInit;
 import net.povstalec.sgjourney.common.init.TagInit;
 import net.povstalec.sgjourney.common.packets.ClientBoundSoundPackets;
 import net.povstalec.sgjourney.common.packets.ClientboundStargateParticleSpawnPacket;
-import net.povstalec.sgjourney.common.packets.ClientboundStargateStateUpdatePacket;
-import net.povstalec.sgjourney.common.packets.ClientboundStargateUpdatePacket;
 
 public abstract class AbstractStargateEntity extends EnergyBlockEntity implements ITransmissionReceiver, StructureGenEntity,
 		SymbolInfo.Interface, DHDInfo.Interface, AddressFilterInfo.Interface, ProtectedBlockEntity
@@ -105,6 +105,8 @@ public abstract class AbstractStargateEntity extends EnergyBlockEntity implement
 	public static final String COVER_BLOCKS = "cover_blocks";
 	public static final String IRIS_INVENTORY = "iris_inventory";
 	public static final String SHIELD_INVENTORY = "shield_inventory";
+	
+	public static final String ENGAGED_CHEVRONS = "engaged_chevrons";
 	
 	public static final boolean FORCE_LOAD_CHUNK = CommonStargateConfig.stargate_loads_chunk_when_connected.get();
 	
@@ -169,8 +171,6 @@ public abstract class AbstractStargateEntity extends EnergyBlockEntity implement
 	protected boolean isPrimary = false;
 	protected boolean isProtected = false;
 	
-	private boolean initialClientSync = false;
-	
 	public StargateBlockCover blockCover = new StargateBlockCover(StargatePart.DEFAULT_PARTS);
 	
 	protected SymbolInfo symbolInfo;
@@ -215,8 +215,6 @@ public abstract class AbstractStargateEntity extends EnergyBlockEntity implement
         
         if(generationStep == StructureGenEntity.Step.READY)
     		generate();
-        
-        updateClientState();
         
         dhdInfo.loadDHD();
 	}
@@ -344,12 +342,56 @@ public abstract class AbstractStargateEntity extends EnergyBlockEntity implement
 		return tag;
 	}
 	
-	//TODO
-	/*@Override
-	public CompoundTag getUpdateTag()
+	@Override
+	public ClientboundBlockEntityDataPacket getUpdatePacket()
 	{
-		return new CompoundTag();
-	}*/
+		return ClientboundBlockEntityDataPacket.create(this);
+	}
+	
+	@Override
+	public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registries)
+	{
+		CompoundTag tag = new CompoundTag();
+		
+		tag.putLong(ENERGY, this.getEnergyStored());
+		
+		tag.putIntArray(ADDRESS, address.getArray());
+		tag.putIntArray(ENGAGED_CHEVRONS, engagedChevrons);
+		// Ticks
+		tag.putInt(StargateConnection.KAWOOSH_TICKS, kawooshTick);
+		tag.putInt(StargateConnection.OPEN_TIME, openTime);
+		tag.putInt(StargateConnection.TIME_SINCE_LAST_TRAVELER, timeSinceLastTraveler);
+		
+		tag.putByte(CONNECTION_STATE, connectionState.byteValue());
+		if(blockCover.isDirty())
+		{
+			tag.put(COVER_BLOCKS, blockCover.serializeNBT(registries));
+			blockCover.setDirty(false);
+		}
+		
+		return tag;
+	}
+	
+	@Override
+	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, HolderLookup.Provider registries)
+	{
+		CompoundTag tag = packet.getTag();
+		
+		ENERGY_STORAGE.setEnergy(tag.getLong(ENERGY));
+		
+		address.fromArray(tag.getIntArray(ADDRESS));
+		engagedChevrons = tag.getIntArray(ENGAGED_CHEVRONS);
+		
+		variant = ResourceLocation.tryParse(tag.getString(VARIANT));
+		// Ticks
+		kawooshTick = tag.getInt(StargateConnection.KAWOOSH_TICKS);
+		openTime = tag.getInt(StargateConnection.OPEN_TIME);
+		timeSinceLastTraveler = tag.getInt(StargateConnection.TIME_SINCE_LAST_TRAVELER);
+		
+		connectionState = StargateConnection.State.fromByte(tag.getByte(CONNECTION_STATE));
+		if(tag.contains(COVER_BLOCKS))
+			blockCover.deserializeNBT(registries, tag.getCompound(COVER_BLOCKS));
+	}
 	
 	public void addStargateToNetwork()
 	{
@@ -617,13 +659,13 @@ public abstract class AbstractStargateEntity extends EnergyBlockEntity implement
 	
 	public static double kawooshFunction(int kawooshTime)
 	{
-		return 8 * Math.sin(Math.PI * (double) kawooshTime / StargateConnection.KAWOOSH_TICKS);
+		return 8 * Math.sin(Math.PI * (double) kawooshTime / StargateConnection.KAWOOSH_DURATION);
 	}
 	
 	public void doKawoosh()
 	{
 		int kawooshTime = getKawooshTickCount();
-		if(kawooshTime > StargateConnection.KAWOOSH_TICKS)
+		if(kawooshTime > StargateConnection.KAWOOSH_DURATION)
 			return;
 		
 		Direction axisDirection = getDirection().getAxis() == Direction.Axis.X ? Direction.SOUTH : Direction.EAST;
@@ -1102,7 +1144,7 @@ public abstract class AbstractStargateEntity extends EnergyBlockEntity implement
 	public void setStargateState(boolean updateInterfaces)
 	{
 		setStargateState(updateInterfaces, false, ShieldingState.OPEN);
-		updateClientState();
+		updateClient();
 		
 	}
 	
@@ -1423,16 +1465,7 @@ public abstract class AbstractStargateEntity extends EnergyBlockEntity implement
 		if(level.isClientSide())
 			return false;
 		
-		PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, level.getChunkAt(this.worldPosition).getPos(), new ClientboundStargateUpdatePacket(this.worldPosition, this.getEnergyStored(), this.openTime, this.timeSinceLastTraveler, this.address.getArray(), this.engagedChevrons, this.kawooshTick, this.animationTick, (short) 0, symbolInfo().pointOfOrigin(), symbolInfo().symbols(), this.variant, ItemStack.EMPTY));
-		return true;
-	}
-	
-	public boolean updateClientState()
-	{
-		if(level.isClientSide())
-			return false;
-		
-		PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, level.getChunkAt(this.worldPosition).getPos(), new ClientboundStargateStateUpdatePacket(this.worldPosition, this.connectionState, this.blockCover.canSinkGate, this.blockCover.blockStates));
+		((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
 		return true;
 	}
 	
@@ -1523,8 +1556,6 @@ public abstract class AbstractStargateEntity extends EnergyBlockEntity implement
 		stargate.updateClient();
 
 		//stargate.blockCover.canSinkGate = true; //TODO Implement a check for whether or not the Stargate can sink into the ground
-		if(!stargate.initialClientSync) // Syncs to client on the first tick
-			stargate.updateClientState();
     }
 	
 	//============================================================================================

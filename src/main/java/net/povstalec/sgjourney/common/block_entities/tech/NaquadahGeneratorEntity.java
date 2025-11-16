@@ -8,7 +8,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.core.BlockPos;
@@ -23,7 +23,6 @@ import net.povstalec.sgjourney.StargateJourney;
 import net.povstalec.sgjourney.common.blocks.tech.NaquadahGeneratorBlock;
 import net.povstalec.sgjourney.common.init.ItemInit;
 import net.povstalec.sgjourney.common.items.NaquadahFuelRodItem;
-import net.povstalec.sgjourney.common.packets.ClientboundNaquadahGeneratorUpdatePacket;
 
 public abstract class NaquadahGeneratorEntity extends EnergyBlockEntity
 {
@@ -58,6 +57,18 @@ public abstract class NaquadahGeneratorEntity extends EnergyBlockEntity
 	{
 		super.saveAdditional(nbt, registries);
 		nbt.put(INVENTORY, itemStackHandler.serializeNBT(registries));
+	}
+	
+	@Override
+	public ClientboundBlockEntityDataPacket getUpdatePacket()
+	{
+		return ClientboundBlockEntityDataPacket.create(this);
+	}
+	
+	@Override
+	public CompoundTag getUpdateTag(HolderLookup.Provider registries)
+	{
+		return this.saveWithoutMetadata(registries);
 	}
 	
 	//============================================================================================
@@ -242,6 +253,12 @@ public abstract class NaquadahGeneratorEntity extends EnergyBlockEntity
 		this.reactionProgress++;
 	}
 	
+	public void updateClient()
+	{
+		if(!level.isClientSide())
+			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
+	}
+	
 	public static void tick(Level level, BlockPos pos, BlockState state, NaquadahGeneratorEntity generator)
 	{
 		if(level.isClientSide())
@@ -257,7 +274,6 @@ public abstract class NaquadahGeneratorEntity extends EnergyBlockEntity
 			generator.outputEnergy(direction.getCounterClockWise());
 		}
 		
-		PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, level.getChunkAt(generator.worldPosition).getPos(),
-				new ClientboundNaquadahGeneratorUpdatePacket(generator.worldPosition, generator.getReactionProgress(), generator.getEnergyStored()));
+		generator.updateClient();
 	}
 }

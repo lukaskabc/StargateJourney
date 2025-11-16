@@ -81,22 +81,6 @@ public abstract class SymbolBlock extends DirectionalBlock implements EntityBloc
 	{
 		return RenderShape.MODEL;
 	}
-	
-	@Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type)
-	{
-        if (!level.isClientSide())
-        {
-            return (localLevel, pos, blockState, entity) -> {
-                if (entity instanceof SymbolBlockEntity symbol) 
-                {
-                	symbol.tick(localLevel, pos, blockState);
-                }
-            };
-        }
-        return null;
-    }
 
 	public boolean use(Level level, BlockPos pos, Player player)
 	{

@@ -39,99 +39,15 @@ public final class PacketHandlerInit
 		
 		// Tech
 		registrar.playToClient(
-				ClientboundTransceiverUpdatePacket.TYPE,
-				ClientboundTransceiverUpdatePacket.STREAM_CODEC,
-				(packet, context) -> ClientboundTransceiverUpdatePacket.handle(packet, context));
-		
-		registrar.playToClient(
-				ClientboundInterfaceUpdatePacket.TYPE,
-				ClientboundInterfaceUpdatePacket.STREAM_CODEC,
-				(packet, context) -> ClientboundInterfaceUpdatePacket.handle(packet, context));
-		
-		registrar.playToClient(
-				ClientboundRingsUpdatePacket.TYPE,
-				ClientboundRingsUpdatePacket.STREAM_CODEC,
-				(packet, context) -> ClientboundRingsUpdatePacket.handle(packet, context));
-		
-		registrar.playToClient(
 				ClientboundRingPanelUpdatePacket.TYPE,
 				ClientboundRingPanelUpdatePacket.STREAM_CODEC,
 				(packet, context) -> ClientboundRingPanelUpdatePacket.handle(packet, context));
-		
-		registrar.playToClient(
-				ClientboundDHDUpdatePacket.TYPE,
-				ClientboundDHDUpdatePacket.STREAM_CODEC,
-				(packet, context) -> ClientboundDHDUpdatePacket.handle(packet, context));
 		
 		//Stargate Info
 		registrar.playToClient(
 				ClientboundStargateParticleSpawnPacket.TYPE,
 				ClientboundStargateParticleSpawnPacket.STREAM_CODEC,
 				(packet, context) -> ClientboundStargateParticleSpawnPacket.handle(packet, context));
-		
-		registrar.playToClient(
-				ClientboundStargateUpdatePacket.TYPE,
-				ClientboundStargateUpdatePacket.STREAM_CODEC,
-				(packet, context) -> ClientboundStargateUpdatePacket.handle(packet, context));
-		
-		registrar.playToClient(
-				ClientboundRotatingStargateUpdatePacket.TYPE,
-				ClientboundRotatingStargateUpdatePacket.STREAM_CODEC,
-				(packet, context) -> ClientboundRotatingStargateUpdatePacket.handle(packet, context));
-		
-		registrar.playToClient(
-				ClientboundStargateStateUpdatePacket.TYPE,
-				ClientboundStargateStateUpdatePacket.STREAM_CODEC,
-				(packet, context) -> ClientboundStargateStateUpdatePacket.handle(packet, context));
-		
-		
-		// Stargate Type Info
-		registrar.playToClient(
-				ClientboundUniverseStargateUpdatePacket.TYPE,
-				ClientboundUniverseStargateUpdatePacket.STREAM_CODEC,
-				(packet, context) -> ClientboundUniverseStargateUpdatePacket.handle(packet, context));
-		
-		registrar.playToClient(
-				ClientboundMilkyWayStargateUpdatePacket.TYPE,
-				ClientboundMilkyWayStargateUpdatePacket.STREAM_CODEC,
-				(packet, context) -> ClientboundMilkyWayStargateUpdatePacket.handle(packet, context));
-		
-		registrar.playToClient(
-				ClientboundPegasusStargateUpdatePacket.TYPE,
-				ClientboundPegasusStargateUpdatePacket.STREAM_CODEC,
-				(packet, context) -> ClientboundPegasusStargateUpdatePacket.handle(packet, context));
-		
-		
-		// Misc
-		registrar.playToClient(
-				ClientboundNaquadahGeneratorUpdatePacket.TYPE,
-				ClientboundNaquadahGeneratorUpdatePacket.STREAM_CODEC,
-				(packet, context) -> ClientboundNaquadahGeneratorUpdatePacket.handle(packet, context));
-		
-		registrar.playToClient(
-				ClientboundNaquadahLiquidizerUpdatePacket.TYPE,
-				ClientboundNaquadahLiquidizerUpdatePacket.STREAM_CODEC,
-				(packet, context) -> ClientboundNaquadahLiquidizerUpdatePacket.handle(packet, context));
-		
-		registrar.playToClient(
-				ClientboundCrystallizerUpdatePacket.TYPE,
-				ClientboundCrystallizerUpdatePacket.STREAM_CODEC,
-				(packet, context) -> ClientboundCrystallizerUpdatePacket.handle(packet, context));
-		
-		registrar.playToClient(
-				ClientboundSymbolUpdatePacket.TYPE,
-				ClientboundSymbolUpdatePacket.STREAM_CODEC,
-				(packet, context) -> ClientboundSymbolUpdatePacket.handle(packet, context));
-		
-		registrar.playToClient(
-				ClientboundCartoucheUpdatePacket.TYPE,
-				ClientboundCartoucheUpdatePacket.STREAM_CODEC,
-				(packet, context) -> ClientboundCartoucheUpdatePacket.handle(packet, context));
-		
-		registrar.playToClient(
-				ClientboundBatteryBlockUpdatePacket.TYPE,
-				ClientboundBatteryBlockUpdatePacket.STREAM_CODEC,
-				(packet, context) -> ClientboundBatteryBlockUpdatePacket.handle(packet, context));
 		
 		
 		// Sounds

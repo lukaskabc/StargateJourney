@@ -3,6 +3,8 @@ package net.povstalec.sgjourney.common.block_entities.stargate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.server.level.ServerLevel;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.povstalec.sgjourney.common.sgjourney.PointOfOrigin;
 import net.povstalec.sgjourney.common.sgjourney.StargateInfo;
 import net.povstalec.sgjourney.common.sgjourney.Symbols;
@@ -20,7 +22,6 @@ import net.povstalec.sgjourney.common.compatibility.cctweaked.StargatePeripheral
 import net.povstalec.sgjourney.common.config.CommonStargateConfig;
 import net.povstalec.sgjourney.common.init.BlockEntityInit;
 import net.povstalec.sgjourney.common.packets.ClientBoundSoundPackets;
-import net.povstalec.sgjourney.common.packets.ClientboundUniverseStargateUpdatePacket;
 import net.povstalec.sgjourney.common.sgjourney.Address;
 import net.povstalec.sgjourney.common.sgjourney.StargateInfo.ChevronLockSpeed;
 
@@ -89,6 +90,31 @@ public class UniverseStargateEntity extends RotatingStargateEntity
 		tag.putIntArray(ADDRESS_BUFFER, addressBuffer.getArray());
 		tag.putInt(SYMBOL_BUFFER, symbolBuffer);
 	}
+	
+	@Override
+	public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registries)
+	{
+		CompoundTag tag = super.getUpdateTag(registries);
+		
+		tag.putInt(SYMBOL_BUFFER, symbolBuffer);
+		tag.putIntArray(ADDRESS_BUFFER, addressBuffer.getArray());
+		
+		return tag;
+	}
+	
+	@Override
+	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, HolderLookup.Provider registries)
+	{
+		super.onDataPacket(net, packet, registries);
+		CompoundTag tag = packet.getTag();
+		
+		symbolBuffer = tag.getInt(ADDRESS_BUFFER);
+		addressBuffer.fromArray(tag.getIntArray(ADDRESS_BUFFER));
+	}
+	
+	//============================================================================================
+	//*******************************************Other********************************************
+	//============================================================================================
 	
 	@Override
 	public StargateInfo.Feedback dhdEngageSymbol(int symbol)
@@ -243,16 +269,6 @@ public class UniverseStargateEntity extends RotatingStargateEntity
 		symbolBuffer = 0;
 		addressBuffer.reset();
 		super.resetAddress(updateInterfaces);
-	}
-	
-	@Override
-	public boolean updateClient()
-	{
-		if(!super.updateClient())
-			return false;
-		
-		PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, level.getChunkAt(this.worldPosition).getPos(), new ClientboundUniverseStargateUpdatePacket(this.worldPosition, this.symbolBuffer, this.addressBuffer.getArray()));
-		return true;
 	}
 
 	@Override

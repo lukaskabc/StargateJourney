@@ -12,7 +12,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.core.BlockPos;
@@ -24,7 +24,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
-import net.povstalec.sgjourney.common.packets.ClientboundNaquadahLiquidizerUpdatePacket;
 
 public abstract class AbstractNaquadahLiquidizerEntity extends BlockEntity
 {
@@ -102,6 +101,18 @@ public abstract class AbstractNaquadahLiquidizerEntity extends BlockEntity
 		
 		tag.putInt(PROGRESS, progress);
 		super.saveAdditional(tag, registries);
+	}
+	
+	@Override
+	public ClientboundBlockEntityDataPacket getUpdatePacket()
+	{
+		return ClientboundBlockEntityDataPacket.create(this);
+	}
+	
+	@Override
+	public CompoundTag getUpdateTag(HolderLookup.Provider registries)
+	{
+		return this.saveWithoutMetadata(registries);
 	}
 	
 	//============================================================================================
@@ -322,6 +333,12 @@ public abstract class AbstractNaquadahLiquidizerEntity extends BlockEntity
 		}
 	}
 	
+	public void updateClient()
+	{
+		if(!level.isClientSide())
+			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
+	}
+	
 	public static void tick(Level level, BlockPos pos, BlockState state, AbstractNaquadahLiquidizerEntity naquadahLiquidizer)
 	{
 		if(level.isClientSide())
@@ -349,8 +366,8 @@ public abstract class AbstractNaquadahLiquidizerEntity extends BlockEntity
 	    	naquadahLiquidizer.putFluidInsideItem();
 		
 		naquadahLiquidizer.outputLiquid();
-		
-		PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, level.getChunkAt(naquadahLiquidizer.worldPosition).getPos(), new ClientboundNaquadahLiquidizerUpdatePacket(naquadahLiquidizer.worldPosition, naquadahLiquidizer.getFluid1(), naquadahLiquidizer.getFluid2(), naquadahLiquidizer.progress));
+	    
+	    naquadahLiquidizer.updateClient();
 	}
 	
 }

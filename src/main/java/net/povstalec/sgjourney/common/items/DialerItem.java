@@ -24,7 +24,7 @@ public class DialerItem extends Item
 		if(level.isClientSide())
 			return super.use(level, player, usedHand);
 		
-		PacketDistributor.sendToPlayer((ServerPlayer) player, new ClientboundDialerOpenScreenPacket(player.blockPosition()));
+		PacketDistributor.sendToPlayer((ServerPlayer) player, new ClientboundDialerOpenScreenPacket(player.getUUID()));
 		
         return super.use(level, player, usedHand);
     }

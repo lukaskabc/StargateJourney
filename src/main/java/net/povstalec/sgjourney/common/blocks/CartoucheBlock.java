@@ -34,8 +34,6 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -172,22 +170,6 @@ public abstract class CartoucheBlock extends HorizontalDirectionalBlock implemen
 
 		return super.playerWillDestroy(level, pos, state, player);
 	}
-	
-	@Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type)
-	{
-        if (!level.isClientSide())
-        {
-            return (localLevel, pos, blockState, entity) -> {
-                if (entity instanceof CartoucheEntity cartouche) 
-                {
-                	cartouche.tick(localLevel, pos, blockState);
-                }
-            };
-        }
-        return null;
-    }
 
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag)

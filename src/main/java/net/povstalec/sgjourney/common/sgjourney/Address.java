@@ -7,6 +7,7 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -23,6 +24,8 @@ import javax.annotation.Nullable;
 
 public abstract class Address implements Cloneable
 {
+	public static final String ADDRESS = "address";
+	
 	public static final String ADDRESS_DIVIDER = "-";
 	public static final int MIN_DIALED_ADDRESS_LENGTH = 6;
 	public static final int MAX_ADDRESS_LENGTH = 9;
@@ -103,6 +106,9 @@ public abstract class Address implements Cloneable
 	
 	public int lastSymbol()
 	{
+		if(addressArray.length == 0)
+			return 0;
+		
 		return addressArray[addressArray.length - 1];
 	}
 	
@@ -164,6 +170,11 @@ public abstract class Address implements Cloneable
 		}
 		
 		return false;
+	}
+	
+	public void saveToCompoundTag(CompoundTag tag, String name)
+	{
+		tag.putIntArray(name, addressArray);
 	}
 	
 	/**
@@ -601,7 +612,7 @@ public abstract class Address implements Cloneable
 				Galaxy.RESOURCE_KEY_CODEC.optionalFieldOf("galaxy").forGetter(weightedAddress -> Optional.ofNullable(weightedAddress.galaxyKey))
 		).apply(instance, Dimension::new));
 		
-		protected ResourceKey<Level> dimension;
+		private ResourceKey<Level> dimension;
 		@Nullable
 		private ResourceKey<Galaxy> galaxyKey;
 		
@@ -609,6 +620,14 @@ public abstract class Address implements Cloneable
 		
 		public Dimension(ResourceKey<Level> dimension, Optional<ResourceKey<Galaxy>> galaxyKey)
 		{
+			this.dimension = dimension;
+			this.galaxyKey = galaxyKey.orElse(null);
+		}
+		
+		public Dimension(ResourceKey<Level> dimension, Optional<ResourceKey<Galaxy>> galaxyKey, int... addressArray)
+		{
+			super(addressArray);
+			
 			this.dimension = dimension;
 			this.galaxyKey = galaxyKey.orElse(null);
 		}

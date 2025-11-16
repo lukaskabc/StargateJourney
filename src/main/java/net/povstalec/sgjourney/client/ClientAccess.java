@@ -15,13 +15,10 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.povstalec.sgjourney.client.screens.ArcheologistNotebookScreen;
 import net.povstalec.sgjourney.client.screens.DialerScreen;
 import net.povstalec.sgjourney.client.screens.GDOScreen;
-import net.povstalec.sgjourney.common.block_entities.*;
 import net.povstalec.sgjourney.common.block_entities.dhd.AbstractDHDEntity;
 import net.povstalec.sgjourney.common.block_entities.stargate.*;
 import net.povstalec.sgjourney.common.block_entities.tech.*;
-import net.povstalec.sgjourney.common.block_entities.tech_interface.AbstractInterfaceEntity;
 import net.povstalec.sgjourney.common.block_entities.transporter.RingPanelEntity;
-import net.povstalec.sgjourney.common.block_entities.transporter.TransportRingsEntity;
 import net.povstalec.sgjourney.common.blocks.stargate.AbstractStargateBlock;
 import net.povstalec.sgjourney.common.blockstates.Orientation;
 import net.povstalec.sgjourney.common.blockstates.StargatePart;
@@ -38,7 +35,7 @@ public class ClientAccess
 		minecraft.setScreen(new ArcheologistNotebookScreen(playerId, mainHand, tag));
 	}
 	
-	public static void updateDialer(BlockPos pos)
+	public static void updateDialer(UUID playerId)
 	{
 		minecraft.setScreen(new DialerScreen());
 	}
@@ -47,64 +44,6 @@ public class ClientAccess
 	{
 		minecraft.setScreen(new GDOScreen(playerId, mainHand, idc, frequency));
 	}
-	
-	public static void updateSymbol(BlockPos pos, int symbolNumber, ResourceLocation pointOfOrigin, ResourceLocation symbols)
-    {
-        final BlockEntity blockEntity = minecraft.level.getBlockEntity(pos);
-        
-        if(blockEntity instanceof final SymbolBlockEntity symbolEntity)
-        {
-        	symbolEntity.symbolNumber = symbolNumber;
-        	symbolEntity.pointOfOrigin = pointOfOrigin;
-        	symbolEntity.symbols = symbols;
-        }
-    }
-    
-    public static void updateCartouche(BlockPos pos, ResourceLocation symbols, int[] address)
-    {
-    	final BlockEntity blockEntity = minecraft.level.getBlockEntity(pos);
-        
-        if(blockEntity instanceof final CartoucheEntity cartouche)
-        {
-    		cartouche.setSymbols(symbols);
-			cartouche.setAddress(new Address.Mutable(address));
-        }
-    }
-    
-    public static void updateInterface(BlockPos pos, long energy, long energyTarget)
-    {
-    	final BlockEntity blockEntity = minecraft.level.getBlockEntity(pos);
-        
-        if(blockEntity instanceof final AbstractInterfaceEntity interfaceEntity)
-		{
-			interfaceEntity.setEnergy(energy);
-			interfaceEntity.setEnergyTarget(energyTarget);
-		}
-    }
-    
-    public static void updateTransceiver(BlockPos pos, boolean editingFrequency, int frequency, String idc)
-    {
-    	final BlockEntity blockEntity = minecraft.level.getBlockEntity(pos);
-        
-        if(blockEntity instanceof final TransceiverEntity transceiver)
-        {
-        	transceiver.setEditingFrequency(editingFrequency);
-        	transceiver.setFrequency(frequency);
-        	transceiver.setCurrentCode(idc);
-        }
-    }
-    
-    public static void updateRings(BlockPos pos, int emptySpace, int transportHeight, int progress)
-    {
-        final BlockEntity blockEntity = minecraft.level.getBlockEntity(pos);
-        
-        if(blockEntity instanceof final TransportRingsEntity rings)
-        {
-        	rings.emptySpace = emptySpace;
-        	rings.transportHeight = transportHeight;
-			rings.updateProgress(progress);
-        }
-    }
     
     public static void updateRingPanel(BlockPos pos, List<BlockPos> ringsPos, List<Component> ringsName)
     {

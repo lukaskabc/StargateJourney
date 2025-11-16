@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.server.level.ServerLevel;
 import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.povstalec.sgjourney.common.block_entities.stargate.IrisStargateEntity;
 import net.povstalec.sgjourney.common.block_entities.stargate.RotatingStargateEntity;
 import net.povstalec.sgjourney.common.blocks.stargate.AbstractStargateBlock;
@@ -29,7 +29,6 @@ import net.povstalec.sgjourney.common.blockstates.InterfaceMode;
 import net.povstalec.sgjourney.common.blockstates.ShieldingState;
 import net.povstalec.sgjourney.common.compatibility.cctweaked.peripherals.InterfacePeripheralWrapper;
 import net.povstalec.sgjourney.common.config.CommonInterfaceConfig;
-import net.povstalec.sgjourney.common.packets.ClientboundInterfaceUpdatePacket;
 import net.povstalec.sgjourney.common.sgjourney.StargateInfo;
 
 public abstract class AbstractInterfaceEntity extends EnergyBlockEntity
@@ -117,6 +116,24 @@ public abstract class AbstractInterfaceEntity extends EnergyBlockEntity
 	{
 		tag.putLong(ENERGY_TARGET, energyTarget);
 		super.saveAdditional(tag, registries);
+	}
+	
+	@Override
+	public ClientboundBlockEntityDataPacket getUpdatePacket()
+	{
+		return ClientboundBlockEntityDataPacket.create(this);
+	}
+	
+	@Override
+	public CompoundTag getUpdateTag(HolderLookup.Provider registries)
+	{
+		return this.saveWithoutMetadata(registries);
+	}
+	
+	public void updateClient()
+	{
+		if(!level.isClientSide())
+			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
 	}
 	
 	//============================================================================================
@@ -319,12 +336,7 @@ public abstract class AbstractInterfaceEntity extends EnergyBlockEntity
 			}
 		}
 		
-		if(level.isClientSide())
-			return;
-		
-		PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, level.getChunkAt(interfaceEntity.worldPosition).getPos(),
-				new ClientboundInterfaceUpdatePacket(interfaceEntity.worldPosition, interfaceEntity.getEnergyStored(), interfaceEntity.getEnergyTarget()));
-			
+		interfaceEntity.updateClient();
 	}
 	
 	private void rotateStargate(RotatingStargateEntity stargate)

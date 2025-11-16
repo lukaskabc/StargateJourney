@@ -13,7 +13,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.povstalec.sgjourney.common.blocks.tech.AbstractCrystallizerBlock;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,7 +26,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
-import net.povstalec.sgjourney.common.packets.ClientboundCrystallizerUpdatePacket;
 
 public abstract class AbstractCrystallizerEntity extends EnergyBlockEntity
 {
@@ -104,6 +103,18 @@ public abstract class AbstractCrystallizerEntity extends EnergyBlockEntity
 		
 		nbt.putInt(PROGRESS, progress);
 		super.saveAdditional(nbt, registries);
+	}
+	
+	@Override
+	public ClientboundBlockEntityDataPacket getUpdatePacket()
+	{
+		return ClientboundBlockEntityDataPacket.create(this);
+	}
+	
+	@Override
+	public CompoundTag getUpdateTag(HolderLookup.Provider registries)
+	{
+		return this.saveWithoutMetadata(registries);
 	}
 	
 	public abstract Fluid getDesiredFluid();
@@ -351,6 +362,12 @@ public abstract class AbstractCrystallizerEntity extends EnergyBlockEntity
 
 	protected abstract void crystallize();
 	
+	public void updateClient()
+	{
+		if(!level.isClientSide())
+			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
+	}
+	
 	public static void tick(Level level, BlockPos pos, BlockState state, AbstractCrystallizerEntity crystallizer)
 	{
 		if(level.isClientSide())
@@ -373,8 +390,8 @@ public abstract class AbstractCrystallizerEntity extends EnergyBlockEntity
 	    	crystallizer.progress = 0;
 	    	setChanged(level, pos, state);
 	    }
-		
-		PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, level.getChunkAt(crystallizer.worldPosition).getPos(), new ClientboundCrystallizerUpdatePacket(crystallizer.worldPosition, crystallizer.getFluid(), crystallizer.progress));
+	    
+	    crystallizer.updateClient();
 	}
 	
 }

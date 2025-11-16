@@ -3,6 +3,8 @@ package net.povstalec.sgjourney.common.block_entities.stargate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.server.level.ServerLevel;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.povstalec.sgjourney.common.block_entities.StructureGenEntity;
 import net.povstalec.sgjourney.common.sgjourney.PointOfOrigin;
 import net.povstalec.sgjourney.common.sgjourney.StargateInfo;
@@ -20,10 +22,8 @@ import net.povstalec.sgjourney.StargateJourney;
 import net.povstalec.sgjourney.common.compatibility.cctweaked.CCTweakedCompatibility;
 import net.povstalec.sgjourney.common.compatibility.cctweaked.StargatePeripheralWrapper;
 import net.povstalec.sgjourney.common.config.ClientStargateConfig;
-import net.povstalec.sgjourney.common.config.CommonStargateConfig;
 import net.povstalec.sgjourney.common.init.BlockEntityInit;
 import net.povstalec.sgjourney.common.packets.ClientBoundSoundPackets;
-import net.povstalec.sgjourney.common.packets.ClientboundPegasusStargateUpdatePacket;
 import net.povstalec.sgjourney.common.sgjourney.Address;
 import net.povstalec.sgjourney.common.sgjourney.StargateInfo.ChevronLockSpeed;
 
@@ -124,6 +124,38 @@ public class PegasusStargateEntity extends IrisStargateEntity
 		tag.putIntArray(ADDRESS_BUFFER, addressBuffer.getArray());
 		tag.putInt(SYMBOL_BUFFER, symbolBuffer);
 		tag.putInt(CURRENT_SYMBOL, currentSymbol);
+	}
+	
+	@Override
+	public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registries)
+	{
+		CompoundTag tag = super.getUpdateTag(registries);
+		
+		tag.putString(POINT_OF_ORIGIN, symbolInfo().pointOfOrigin().toString());
+		tag.putString(SYMBOLS, symbolInfo().symbols().toString());
+		
+		tag.putIntArray(ADDRESS_BUFFER, addressBuffer.getArray());
+		tag.putInt(SYMBOL_BUFFER, symbolBuffer);
+		tag.putInt(CURRENT_SYMBOL, currentSymbol);
+		
+		return tag;
+	}
+	
+	@Override
+	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, HolderLookup.Provider registries)
+	{
+		super.onDataPacket(net, packet, registries);
+		CompoundTag tag = packet.getTag();
+		
+		if (tag.contains(POINT_OF_ORIGIN))
+			symbolInfo().setPointOfOrigin(ResourceLocation.tryParse(tag.getString(POINT_OF_ORIGIN)));
+		
+		if(tag.contains(SYMBOLS))
+			symbolInfo().setSymbols(ResourceLocation.tryParse(tag.getString(SYMBOLS)));
+		
+		addressBuffer.fromArray(tag.getIntArray(ADDRESS_BUFFER));
+		symbolBuffer = tag.getInt(SYMBOL_BUFFER);
+		currentSymbol = tag.getInt(CURRENT_SYMBOL);
 	}
 	
 	//============================================================================================
@@ -268,23 +300,13 @@ public class PegasusStargateEntity extends IrisStargateEntity
 	
 	public static void tick(Level level, BlockPos pos, BlockState state, PegasusStargateEntity stargate)
 	{
+		AbstractStargateEntity.tick(level, pos, state, stargate);
+		
 		if(level.isClientSide())
 			return;
 		
 		stargate.animateSpin();
-		
-		AbstractStargateEntity.tick(level, pos, state, stargate);
 		stargate.updateClient();
-	}
-	
-	@Override
-	public boolean updateClient()
-	{
-		if(!super.updateClient())
-			return false;
-		
-		PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, level.getChunkAt(this.worldPosition).getPos(), new ClientboundPegasusStargateUpdatePacket(this.worldPosition, this.symbolBuffer, this.addressBuffer.getArray(), this.currentSymbol));
-		return true;
 	}
 	
 	private boolean spinClockwise()

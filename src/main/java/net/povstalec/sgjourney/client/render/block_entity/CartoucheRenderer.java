@@ -83,41 +83,38 @@ public abstract class CartoucheRenderer
             stack.mulPose(Axis.XP.rotationDegrees(-90));
         else if(orientation == Orientation.DOWNWARD)
             stack.mulPose(Axis.XP.rotationDegrees(90));
-
-        if(cartouche != null)
-        {
-    		Matrix4f matrix4 = stack.last().pose();
-			PoseStack.Pose pose = stack.last();
-        	Symbols symbols = getSymbols(cartouche);
-            light = LevelRenderer.getLightColor(cartouche.getLevel(), pos);
-        	
-        	Address address = cartouche.getAddress();
-            
-            if(address != null)
-            {
-            	float symbolSize = MAX_HEIGHT / address.regularSymbolCount();
-                if(symbolSize > MAX_WIDTH)
-                	symbolSize = MAX_WIDTH;
-                
-            	if(symbols != null)
-            	{
-                	ResourceLocation texture = symbols.getSymbolTexture();
-            		
-            		for(int i = 0; i < address.regularSymbolCount(); i++)
-                    {
-                    	VertexConsumer consumer = source.getBuffer(SGJourneyRenderTypes.symbol(texture));
-                    	
-                    	float yStart = 0.5F + symbolSize * address.regularSymbolCount() / 2;
-                    	if(yStart > 0.5F + MAX_HEIGHT / 2)
-                    		yStart = 0.5F + MAX_HEIGHT / 2;
-                    	
-                    	float yPos = yStart - symbolSize / 2 - symbolSize * i;
-                    	
-                        renderSymbol(consumer, matrix4, pose, light, symbolSize, 0, yPos, SYMBOL_OFFSET, symbols.getSize(), symbols.getTextureOffset(address.symbolAt(i)));
-                    }
-            	}
-            }
-        }
+		
+		Matrix4f matrix4 = stack.last().pose();
+		PoseStack.Pose pose = stack.last();
+		Symbols symbols = getSymbols(cartouche);
+		light = LevelRenderer.getLightColor(cartouche.getLevel(), pos);
+		
+		Address address = cartouche.getAddress();
+		
+		if(address != null)
+		{
+			float symbolSize = MAX_HEIGHT / address.regularSymbolCount();
+			if(symbolSize > MAX_WIDTH)
+				symbolSize = MAX_WIDTH;
+			
+			if(symbols != null)
+			{
+				ResourceLocation texture = symbols.getSymbolTexture();
+				
+				for(int i = 0; i < address.regularSymbolCount(); i++)
+				{
+					VertexConsumer consumer = source.getBuffer(SGJourneyRenderTypes.symbol(texture));
+					
+					float yStart = 0.5F + symbolSize * address.regularSymbolCount() / 2;
+					if(yStart > 0.5F + MAX_HEIGHT / 2)
+						yStart = 0.5F + MAX_HEIGHT / 2;
+					
+					float yPos = yStart - symbolSize / 2 - symbolSize * i;
+					
+					renderSymbol(consumer, matrix4, pose, light, symbolSize, 0, yPos, SYMBOL_OFFSET, symbols.getSize(), symbols.getTextureOffset(address.symbolAt(i)));
+				}
+			}
+		}
         
 		stack.popPose();
 	}
@@ -140,13 +137,6 @@ public abstract class CartoucheRenderer
 			renderCartoucheBlock(cartouche, stack, source, combinedLight);
 		}
 		
-		@Override
-		public AABB getRenderBoundingBox(CartoucheEntity.Stone cartouche)
-		{
-			return new AABB(cartouche.getBlockPos().getX() - 1, cartouche.getBlockPos().getY(), cartouche.getBlockPos().getZ() - 1,
-					cartouche.getBlockPos().getX() + 2, cartouche.getBlockPos().getY() + 2, cartouche.getBlockPos().getZ() + 2);
-		}
-		
 	}
 	
 	public static class Sandstone extends CartoucheRenderer implements BlockEntityRenderer<CartoucheEntity.Sandstone>
@@ -165,13 +155,6 @@ public abstract class CartoucheRenderer
 			renderCartoucheBlock(cartouche, stack, source, combinedLight);
 		}
 		
-		@Override
-		public AABB getRenderBoundingBox(CartoucheEntity.Sandstone cartouche)
-		{
-			return new AABB(cartouche.getBlockPos().getX() - 1, cartouche.getBlockPos().getY(), cartouche.getBlockPos().getZ() - 1,
-					cartouche.getBlockPos().getX() + 2, cartouche.getBlockPos().getY() + 2, cartouche.getBlockPos().getZ() + 2);
-		}
-		
 	}
 	
 	public static class RedSandstone extends CartoucheRenderer implements BlockEntityRenderer<CartoucheEntity.RedSandstone>
@@ -188,13 +171,6 @@ public abstract class CartoucheRenderer
 		public void render(CartoucheEntity.RedSandstone cartouche, float partialTick, PoseStack stack, MultiBufferSource source, int combinedLight, int combinedOverlay)
 		{
 			renderCartoucheBlock(cartouche, stack, source, combinedLight);
-		}
-		
-		@Override
-		public AABB getRenderBoundingBox(CartoucheEntity.RedSandstone cartouche)
-		{
-			return new AABB(cartouche.getBlockPos().getX() - 1, cartouche.getBlockPos().getY(), cartouche.getBlockPos().getZ() - 1,
-					cartouche.getBlockPos().getX() + 2, cartouche.getBlockPos().getY() + 2, cartouche.getBlockPos().getZ() + 2);
 		}
 		
 	}

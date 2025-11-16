@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -13,10 +14,8 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
-import net.neoforged.neoforge.network.PacketDistributor;
 import net.povstalec.sgjourney.common.config.CommonTechConfig;
 import net.povstalec.sgjourney.common.init.BlockEntityInit;
-import net.povstalec.sgjourney.common.packets.ClientboundBatteryBlockUpdatePacket;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -52,6 +51,16 @@ public abstract class BatteryBlockEntity extends EnergyBlockEntity
 	{
 		super.saveAdditional(nbt, registries);
 		nbt.put(INVENTORY, itemHandler.serializeNBT(registries));
+	}
+	
+	public ClientboundBlockEntityDataPacket getUpdatePacket()
+	{
+		return ClientboundBlockEntityDataPacket.create(this);
+	}
+	
+	public CompoundTag getUpdateTag(HolderLookup.Provider registries)
+	{
+		return this.saveWithoutMetadata(registries);
 	}
 	
 	//============================================================================================
@@ -107,6 +116,12 @@ public abstract class BatteryBlockEntity extends EnergyBlockEntity
 		};
 	}
 	
+	public void updateClient()
+	{
+		if(!level.isClientSide())
+			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
+	}
+	
 	//============================================================================================
 	//******************************************Ticking*******************************************
 	//============================================================================================
@@ -119,8 +134,7 @@ public abstract class BatteryBlockEntity extends EnergyBlockEntity
 		battery.extractItemEnergy(battery.itemHandler.getStackInSlot(0));
 		battery.fillItemEnergy(battery.itemHandler.getStackInSlot(1));
 		
-		PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, level.getChunkAt(battery.getBlockPos()).getPos(),
-				new ClientboundBatteryBlockUpdatePacket(battery.getBlockPos(), battery.getEnergyStored()));
+		battery.updateClient();
 	}
 	
 	
