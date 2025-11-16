@@ -181,13 +181,8 @@ public abstract class CableBlockEntity extends BlockEntity
 			{
 				IEnergyStorage energy = blockEntity.getCapability(ForgeCapabilities.ENERGY, direction.getOpposite()).resolve().orElse(null);
 				
-				if(energy != null && energy.canReceive())
-				{
-					if(energy instanceof SGJourneyEnergy sgjourneyEnergy && sgjourneyEnergy.getTrueEnergyStored() < sgjourneyEnergy.getTrueMaxEnergyStored())
-						outputs++;
-					else if(energy.getEnergyStored() < energy.getMaxEnergyStored())
-						outputs++;
-				}
+				if(energy != null && energy.canReceive() && energy.receiveEnergy(1, true) > 0)
+					outputs++;
 			}
 		}
 		return outputs;

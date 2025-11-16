@@ -402,7 +402,7 @@
 	"galaxy.sgjourney.triangulum": "Triangulum",
 	"galaxy.sgjourney.andromeda": "Andromeda",
 	
-	"solar_system.sgjourney.milky_way": "Terra",
+	"solar_system.sgjourney.terra": "Terra",
 	"solar_system.sgjourney.abydos": "Abydos",
 	"solar_system.sgjourney.chulak": "Chulak",
 	"solar_system.sgjourney.unitas": "Unitas",
@@ -413,6 +413,15 @@
 	"solar_system.sgjourney.end": "End",
 	"solar_system.sgjourney.lantea": "Lantea",
 	"solar_system.sgjourney.athos": "Athos",
+	
+	"planet.sgjourney.abydos": "Abydos",
+	"planet.sgjourney.chulak": "Chulak",
+	"planet.sgjourney.unitas": "Unitas",
+	"planet.sgjourney.rima": "Rima",
+	"planet.sgjourney.cavum_tenebrae": "Cavum Tenebrae",
+	"planet.sgjourney.lantea": "Lantea",
+	"planet.sgjourney.athos": "Athos",
+	
 	
 	"symbol_set.sgjourney.universal": "Universal Symbol Set",
 	"symbol_set.sgjourney.galaxy_milky_way": "Milky Way Symbol Set",
