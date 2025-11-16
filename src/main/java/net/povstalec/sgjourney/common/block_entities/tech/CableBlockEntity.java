@@ -174,12 +174,12 @@ public abstract class CableBlockEntity extends BlockEntity
 		for(Direction direction : getConnectedSides())
 		{
 			BlockPos outputPos = getBlockPos().relative(direction);
-			BlockEntity blockEntity =  level.getBlockEntity(outputPos);
+			BlockEntity blockEntity = level.getBlockEntity(outputPos);
 			if(blockEntity != null)
 			{
 				IEnergyStorage energy = getLevel().getCapability(Capabilities.EnergyStorage.BLOCK, outputPos, direction.getOpposite());
 
-				if(energy != null && energy.canReceive() && energy.receiveEnergy(1, true) > 0)
+				if(energy != null && energy.canReceive() && energy.receiveEnergy(Integer.MAX_VALUE, true) > 0)
 					outputs++;
 			}
 		}
