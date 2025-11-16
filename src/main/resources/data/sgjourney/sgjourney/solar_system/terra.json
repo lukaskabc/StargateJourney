@@ -13,18 +13,28 @@
 	"dimensions":
 	[
 		"minecraft:overworld",
+		"stellaris:earth_orbit",
 		"ad_astra:earth_orbit",
-
+		
+		"stellaris:moon",
 		"ad_astra:moon",
 		"ad_astra:moon_orbit",
-
+		
+		"stellaris:mars",
 		"ad_astra:mars",
+		"stellaris:mars_orbit",
 		"ad_astra:mars_orbit",
 
+		"stellaris:mercury",
 		"ad_astra:mercury",
+		"stellaris:mercury_orbit",
 		"ad_astra:mercury_orbit",
 
+		"stellaris:venus",
 		"ad_astra:venus",
-		"ad_astra:venus_orbit"
+		"stellaris:venus_orbit",
+		"ad_astra:venus_orbit",
+		
+		"stellaris:jupiter"
 	]
 }
