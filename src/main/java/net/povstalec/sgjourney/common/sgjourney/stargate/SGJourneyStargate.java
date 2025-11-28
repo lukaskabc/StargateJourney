@@ -14,6 +14,7 @@ import net.povstalec.sgjourney.common.block_entities.stargate.AbstractStargateEn
 import net.povstalec.sgjourney.common.block_entities.stargate.IrisStargateEntity;
 import net.povstalec.sgjourney.common.block_entities.tech_interface.AbstractInterfaceEntity;
 import net.povstalec.sgjourney.common.blockstates.Orientation;
+import net.povstalec.sgjourney.common.config.CommonStargateConfig;
 import net.povstalec.sgjourney.common.data.Universe;
 import net.povstalec.sgjourney.common.misc.Conversion;
 import net.povstalec.sgjourney.common.misc.CoordinateHelper;
@@ -346,6 +347,12 @@ public class SGJourneyStargate implements Stargate
 	public long getEnergyCapacity(MinecraftServer server)
 	{
 		return stargateReturn(server, stargate -> stargate.getEnergyCapacity(), 0L);
+	}
+	
+	@Override
+	public boolean canPowerFromOtherSide(MinecraftServer server)
+	{
+		return CommonStargateConfig.can_draw_power_from_both_ends.get();
 	}
 	
 	@Override

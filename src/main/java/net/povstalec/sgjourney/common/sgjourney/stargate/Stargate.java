@@ -299,9 +299,15 @@ public interface Stargate
 	
 	/**
 	 * @param server Current Minecraft Server
-	 * @return Max amount of energy tuat can be stored in the Stargate's energy buffer
+	 * @return Max amount of energy that can be stored in the Stargate's energy buffer
 	 */
 	long getEnergyCapacity(MinecraftServer server);
+	
+	/**
+	 * @param server Current Minecraft Server
+	 * @return True if this Stargate can supply energy to the connection even if it did not initiate the connection
+	 */
+	boolean canPowerFromOtherSide(MinecraftServer server);
 	
 	/**
 	 * Extracts energy from the Stargate's energy buffer (used mainly for drawing energy to establish and then feed a Stargate Connection)

@@ -192,6 +192,12 @@ public class SpawnerStargate implements Stargate
 	}
 	
 	@Override
+	public boolean canPowerFromOtherSide(MinecraftServer server)
+	{
+		return false;
+	}
+	
+	@Override
 	public long extractEnergy(MinecraftServer server, long energy, boolean simulate)
 	{
 		return Math.min(energy, getEnergyStored(server));

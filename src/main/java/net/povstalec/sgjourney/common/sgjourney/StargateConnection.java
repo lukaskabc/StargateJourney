@@ -326,7 +326,7 @@ public class StargateConnection
 			return true;
 		}
 		//TODO Tie this to Advanced Protocols
-		else if(CommonStargateConfig.can_draw_power_from_both_ends.get() && canExtract(server, this.dialedStargate, energyDraw))
+		else if(this.dialedStargate.canPowerFromOtherSide(server) && canExtract(server, this.dialedStargate, energyDraw))
 		{
 			this.dialedStargate.extractEnergy(server, energyDraw, false);
 			return true;
