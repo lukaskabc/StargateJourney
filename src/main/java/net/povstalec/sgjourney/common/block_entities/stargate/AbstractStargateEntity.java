@@ -74,7 +74,8 @@ public abstract class AbstractStargateEntity extends EnergyBlockEntity implement
 {
 	public static final String EMPTY = StargateJourney.EMPTY;
 	
-	public static final String ID_9_CHEVRON_ADDRESS = "9_hevron_address";
+	public static final String ID_9_CHEVRON_ADDRESS_WRONG = "9_hevron_address";
+	public static final String ID_9_CHEVRON_ADDRESS = "9_chevron_address";
 	
 	public static final String EVENT_STARGATE_ROTATION_STARTED = "stargate_rotation_started";
 	public static final String EVENT_STARGATE_ROTATION_STOPPED = "stargate_rotation_stopped";
@@ -246,7 +247,10 @@ public abstract class AbstractStargateEntity extends EnergyBlockEntity implement
 		network = tag.getInt(NETWORK);
 		restrictNetwork = tag.getBoolean(RESTRICT_NETWORK);
 		
-		id9ChevronAddress = Address.Immutable.extendWithPointOfOrigin(new Address.Immutable(tag.getIntArray(ID_9_CHEVRON_ADDRESS)));
+		if(tag.contains(ID_9_CHEVRON_ADDRESS_WRONG,  CompoundTag.TAG_INT_ARRAY)) // TODO For legacy reasons
+			id9ChevronAddress = Address.Immutable.extendWithPointOfOrigin(new Address.Immutable(tag.getIntArray(ID_9_CHEVRON_ADDRESS_WRONG)));
+		else
+			id9ChevronAddress = Address.Immutable.extendWithPointOfOrigin(new Address.Immutable(tag.getIntArray(ID_9_CHEVRON_ADDRESS)));
 		
 		if(tag.contains(DISPLAY_ID))
 			displayID = tag.getBoolean(DISPLAY_ID);
