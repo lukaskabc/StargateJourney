@@ -218,6 +218,11 @@ public class StargateInfo
 		{
 			return this.type == FeedbackType.SKIPPABLE_ERROR;
 		}
+		
+		public boolean isConnectionEstablished()
+		{
+			return this == CONNECTION_ESTABLISHED_SYSTEM_WIDE || this == CONNECTION_ESTABLISHED_INTERSTELLAR || this == CONNECTION_ESTABLISHED_INTERGALACTIC;
+		}
 	}
 	
 	private static Component createInfo(String feedback)

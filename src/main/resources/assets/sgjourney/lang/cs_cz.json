@@ -520,14 +520,19 @@
 	"info.sgjourney.address_table": "Tabulka adres",
 	"info.sgjourney.energy": "Energy",
 	
+	"tooltip.sgjourney.unknown": "Neznámé",
+	"tooltip.sgjourney.text": "Text",
 	"tooltip.sgjourney.symbol": "Symbol",
 	"tooltip.sgjourney.symbols": "Symboly",
 	"tooltip.sgjourney.point_of_origin": "Výchozí bod",
 	"tooltip.sgjourney.address": "Adresa",
 	"tooltip.sgjourney.9_chevron_address": "9chevronová adresa",
+	"tooltip.sgjourney.transporter_id": "ID transportéru",
+	"tooltip.sgjourney.coords": "Koordináty",
 	"tooltip.sgjourney.energy": "Energie",
 	"tooltip.sgjourney.energy_buffer": "Vyrovnavač energie",
 	"tooltip.sgjourney.energy_target": "Cílené množství energie",
+	"tooltip.sgjourney.memory_capacity": "Paměťová kapacita",
 	"tooltip.sgjourney.fluid": "Tekutina",
 	"tooltip.sgjourney.holding": "Uvnitř",
 	"tooltip.sgjourney.dimension": "Dimenze",
@@ -747,5 +752,7 @@
 
 	"message.sgjourney.gdo.shielded": "Chráněno",
 	"message.sgjourney.gdo.error.no_nearby_stargate": "Žádná hvězdná brána poblíž",
-	"message.sgjourney.gdo.error.stargate_not_connected": "Hvězdná brána není připojena"
+	"message.sgjourney.gdo.error.stargate_not_connected": "Hvězdná brána není připojena",
+	
+	"message.sgjourney.memory_crystal.saved.transporter_id": "Uloženo ID transportéru"
 }

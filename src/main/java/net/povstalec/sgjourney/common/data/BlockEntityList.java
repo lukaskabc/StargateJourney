@@ -1,9 +1,7 @@
 package net.povstalec.sgjourney.common.data;
 
 import java.util.HashMap;
-import java.util.Optional;
 import java.util.Random;
-import java.util.UUID;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -20,6 +18,7 @@ import net.povstalec.sgjourney.common.block_entities.stargate.AbstractStargateEn
 import net.povstalec.sgjourney.common.block_entities.transporter.AbstractTransporterEntity;
 import net.povstalec.sgjourney.common.misc.Conversion;
 import net.povstalec.sgjourney.common.sgjourney.Address;
+import net.povstalec.sgjourney.common.sgjourney.TransporterID;
 import net.povstalec.sgjourney.common.sgjourney.stargate.SGJourneyStargate;
 import net.povstalec.sgjourney.common.sgjourney.stargate.Stargate;
 import net.povstalec.sgjourney.common.sgjourney.transporter.SGJourneyTransporter;
@@ -42,7 +41,7 @@ public class BlockEntityList extends SavedData
 	private MinecraftServer server;
 	
 	protected HashMap<Address.Immutable, Stargate> stargateMap = new HashMap<Address.Immutable, Stargate>();
-	protected HashMap<UUID, Transporter> transporterMap = new HashMap<UUID, Transporter>();
+	protected HashMap<TransporterID, Transporter> transporterMap = new HashMap<TransporterID, Transporter>();
 	
 	//============================================================================================
 	//******************************************Stargate******************************************
@@ -122,6 +121,21 @@ public class BlockEntityList extends SavedData
 		return stargateMap.get(address);
 	}
 	
+	public Address.Immutable generate9ChevronAddress()
+	{
+		Random random = new Random();
+		Address.Immutable address;
+		while(true)
+		{
+			address = Address.Immutable.randomAddress(8, 36, random.nextLong());
+			
+			if(!containsStargate(address))
+				break;
+		}
+		
+		return address;
+	}
+	
 	@Nullable
 	public Stargate getRandomStargate(long seed)
 	{
@@ -146,12 +160,12 @@ public class BlockEntityList extends SavedData
 	public Transporter addTransporter(AbstractTransporterEntity transporterEntity)
 	{
 		if(transporterEntity.getID() == null)
-			transporterEntity.setID(transporterEntity.generateID());
+			transporterEntity.setID(generateTransporterID());
 		
-		UUID id = transporterEntity.getID();
+		TransporterID transporterID = transporterEntity.getID();
 		
-		if(this.transporterMap.containsKey(id))
-			return this.transporterMap.get(id); // Returns an existing Transporter
+		if(this.transporterMap.containsKey(transporterID))
+			return this.transporterMap.get(transporterID); // Returns an existing Transporter
 		
 		if(transporterEntity.getLevel() == null)
 			return null;
@@ -161,39 +175,25 @@ public class BlockEntityList extends SavedData
 		
 		SGJourneyTransporter transporter = new SGJourneyTransporter(transporterEntity);
 		
-		this.transporterMap.put(id, transporter);
+		this.transporterMap.put(transporterID, transporter);
 		
 		this.setDirty();
 		
-		StargateJourney.LOGGER.debug("Added Transporter " + id + " to BlockEntityList");
+		StargateJourney.LOGGER.debug("Added Transporter " + transporterID + " to BlockEntityList");
 		
 		return transporter;
 	}
 	
-	public void removeTransporter(UUID id)
+	public void removeTransporter(TransporterID transporterID)
 	{
-		if(!this.transporterMap.containsKey(id))
+		if(!this.transporterMap.containsKey(transporterID))
 		{
-			StargateJourney.LOGGER.error(id + " not found in BlockEntityList");
+			StargateJourney.LOGGER.error(transporterID + " not found in BlockEntityList");
 			return;
 		}
-		this.transporterMap.remove(id);
-		StargateJourney.LOGGER.debug("Removed Transporter " + id + " from BlockEntityList");
+		this.transporterMap.remove(transporterID);
+		StargateJourney.LOGGER.debug("Removed Transporter " + transporterID + " from BlockEntityList");
 		setDirty();
-	}
-	
-	@SuppressWarnings("unchecked")
-	public HashMap<UUID, Transporter> getTransporters()
-	{
-		return (HashMap<UUID, Transporter>) transporterMap.clone();
-	}
-	
-	@Nullable
-	public Transporter getTransporter(UUID id)
-	{
-		Transporter transporter = transporterMap.get(id);
-		
-		return transporter;
 	}
 	
 	public void printTransporters()
@@ -203,6 +203,37 @@ public class BlockEntityList extends SavedData
 		{
 			System.out.println("- " + transporterEntry.getKey() + " " + transporterEntry.getValue().toString());
 		});
+	}
+	
+	@SuppressWarnings("unchecked")
+	public HashMap<TransporterID, Transporter> getTransporters()
+	{
+		return (HashMap<TransporterID, Transporter>) transporterMap.clone();
+	}
+	
+	public boolean containsTransporter(TransporterID transporterID)
+	{
+		return transporterMap.containsKey(transporterID);
+	}
+	
+	@Nullable
+	public Transporter getTransporter(TransporterID transporterID)
+	{
+		return transporterMap.get(transporterID);
+	}
+	
+	public TransporterID.Immutable generateTransporterID()
+	{
+		Random random = new Random();
+		TransporterID.Immutable transporterID;
+		while(true)
+		{
+			transporterID = TransporterID.Immutable.randomID(random.nextLong());
+			if(!containsTransporter(transporterID))
+				break;
+		}
+		
+		return transporterID;
 	}
 	
 	//================================================================================================
@@ -282,21 +313,8 @@ public class BlockEntityList extends SavedData
 	private void deserializeTransporters(CompoundTag blockEntityList)
 	{
 		StargateJourney.LOGGER.debug("Deserializing Transporters");
-		// Transport Rings deserialization for legacy reasons
-		if(blockEntityList.contains(TRANSPORT_RINGS))
-		{
-			CompoundTag transportRingsTag = blockEntityList.getCompound(TRANSPORT_RINGS);
-			
-			transportRingsTag.getAllKeys().stream().forEach(transportRings ->
-			{
-				Transporter transporter = tryDeserializeTransporter(server, transportRings, transportRingsTag.getCompound(transportRings));
-
-				if(transporter != null && !this.transporterMap.containsKey(transporter.getID()))
-					this.transporterMap.put(transporter.getID(), transporter);
-			});
-		}
-		
-		CompoundTag transportersTag = blockEntityList.getCompound(TRANSPORTERS);
+		//TODO Transport Rings deserialization for legacy reasons
+		CompoundTag transportersTag = blockEntityList.getCompound(blockEntityList.contains(TRANSPORT_RINGS) ? TRANSPORT_RINGS : TRANSPORTERS);
 		
 		transportersTag.getAllKeys().stream().forEach(transporterString ->
 		{
@@ -309,27 +327,32 @@ public class BlockEntityList extends SavedData
 		StargateJourney.LOGGER.debug("Finished deserializing Transporters");
 	}
 	
-	private static Transporter tryDeserializeTransporter(MinecraftServer server, String id, CompoundTag transporterTag)
+	private Transporter tryDeserializeTransporter(MinecraftServer server, String id, CompoundTag transporterTag)
 	{
-		try
+		if(TransporterID.canBeTransformedToID(id))
 		{
-			SGJourneyTransporter transporter = new SGJourneyTransporter();
-			transporter.deserializeNBT(server, UUID.fromString(id), transporterTag);
-			return transporter;
-		}
-		catch(IllegalArgumentException e)
-		{
-			ResourceKey<Level> dimension = Conversion.stringToDimension(transporterTag.getString(Transporter.DIMENSION));
-			BlockPos blockPos = Conversion.intArrayToBlockPos(transporterTag.getIntArray(Transporter.COORDINATES));
-			
-			if(dimension != null && blockPos != null && server.getLevel(dimension).getBlockEntity(blockPos) instanceof AbstractTransporterEntity transporter)
+			try
 			{
-				transporter.setID(transporter.generateID());
-				return new SGJourneyTransporter(transporter);
+				TransporterID.verifyValidity(TransporterID.idStringToIntArray(id));
+				
+				SGJourneyTransporter transporter = new SGJourneyTransporter();
+				transporter.deserializeNBT(server, new TransporterID.Immutable(id), transporterTag);
+				return transporter;
 			}
-			else
-				return null;
+			catch(IllegalArgumentException e) { StargateJourney.LOGGER.error("Cannot deserialize Transporter " + id + " because it is invalid", e); }
 		}
+		
+		ResourceKey<Level> dimension = Conversion.stringToDimension(transporterTag.getString(Transporter.DIMENSION));
+		BlockPos blockPos = Conversion.intArrayToBlockPos(transporterTag.getIntArray(Transporter.COORDINATES));
+		
+		if(dimension != null && blockPos != null && server.getLevel(dimension).getBlockEntity(blockPos) instanceof AbstractTransporterEntity transporter)
+		{
+			transporter.setID(generateTransporterID());
+			setDirty();
+			return new SGJourneyTransporter(transporter);
+		}
+		else
+			return null;
 	}
 	
 	//============================================================================================

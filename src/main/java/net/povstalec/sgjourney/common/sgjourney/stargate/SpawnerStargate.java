@@ -299,6 +299,12 @@ public class SpawnerStargate implements Stargate
 	}
 	
 	@Override
+	public boolean requiresEnergyBypass(MinecraftServer server, int openTime)
+	{
+		return openTime > SGJourneyStargate.MAX_OPEN_TIME;
+	}
+	
+	@Override
 	public CompoundTag serializeNBT()
 	{
 		return null; //TODO

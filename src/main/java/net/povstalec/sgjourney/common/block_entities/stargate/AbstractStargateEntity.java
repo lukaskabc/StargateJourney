@@ -15,10 +15,12 @@ import net.povstalec.sgjourney.common.config.CommonPermissionConfig;
 import net.povstalec.sgjourney.common.config.CommonZPMConfig;
 import net.povstalec.sgjourney.common.init.DamageSourceInit;
 import net.povstalec.sgjourney.common.misc.ComponentHelper;
+import net.povstalec.sgjourney.common.misc.PDAStatus;
 import net.povstalec.sgjourney.common.sgjourney.*;
 import net.povstalec.sgjourney.common.sgjourney.info.AddressFilterInfo;
 import net.povstalec.sgjourney.common.sgjourney.info.DHDInfo;
 import net.povstalec.sgjourney.common.sgjourney.info.SymbolInfo;
+import net.povstalec.sgjourney.common.sgjourney.stargate.SGJourneyStargate;
 import net.povstalec.sgjourney.common.sgjourney.stargate.Stargate;
 import org.jetbrains.annotations.NotNull;
 
@@ -71,7 +73,7 @@ import net.povstalec.sgjourney.common.packets.ClientBoundSoundPackets;
 import net.povstalec.sgjourney.common.packets.ClientboundStargateParticleSpawnPacket;
 
 public abstract class AbstractStargateEntity extends EnergyBlockEntity implements ITransmissionReceiver, StructureGenEntity,
-		SymbolInfo.Interface, DHDInfo.Interface, AddressFilterInfo.Interface, ProtectedBlockEntity
+		SymbolInfo.Interface, DHDInfo.Interface, AddressFilterInfo.Interface, ProtectedBlockEntity, PDAStatus
 {
 	public static final String EMPTY = StargateJourney.EMPTY;
 	public static final String ID = "ID"; //TODO For legacy reasons
@@ -397,7 +399,7 @@ public abstract class AbstractStargateEntity extends EnergyBlockEntity implement
 	public void addStargateToNetwork()
 	{
 		if(id9ChevronAddress.getType() != Address.Type.ADDRESS_9_CHEVRON || BlockEntityList.get(level).containsStargate(id9ChevronAddress))
-			set9ChevronAddress(Address.Immutable.extendWithPointOfOrigin(generate9ChevronAddress()));
+			set9ChevronAddress(Address.Immutable.extendWithPointOfOrigin(BlockEntityList.get(level).generate9ChevronAddress()));
 		
 		StargateNetwork.get(level).addStargate(this);
 		this.setChanged();
@@ -418,21 +420,6 @@ public abstract class AbstractStargateEntity extends EnergyBlockEntity implement
 	public Address.Immutable get9ChevronAddress()
 	{
 		return id9ChevronAddress;
-	}
-	
-	protected Address.Immutable generate9ChevronAddress()
-	{
-		Random random = new Random();
-		Address.Immutable address;
-		while(true)
-		{
-			address = Address.Immutable.randomAddress(8, 36, random.nextLong());
-			
-			if(!BlockEntityList.get(level).containsStargate(address))
-				break;
-		}
-		
-		return address;
 	}
 
 	
@@ -578,23 +565,29 @@ public abstract class AbstractStargateEntity extends EnergyBlockEntity implement
 		if(!address.canBeDialed())
 		{
 			chevronSound((short) 0, false, false, false);
-			return resetStargate(StargateInfo.Feedback.INCOMPLETE_ADDRESS);
+			return resetStargate(makeDialAttempt(StargateInfo.Feedback.INCOMPLETE_ADDRESS));
 		}
 		else if(!isConnected())
 		{
 			if(!isObstructed())
 			{
 				updateInterfaceBlocks(EVENT_CHEVRON_ENGAGED, getAddress().getLength(), 0, false, 0);
-				StargateInfo.Feedback feedback = setRecentFeedback(engageStargate(getAddress(), true));
+				StargateInfo.Feedback feedback = setRecentFeedback(makeDialAttempt(engageStargate(getAddress(), true)));
 				chevronSound((short) 0, false, false, false);
 				return feedback;
 			}
 			else
-				return resetStargate(StargateInfo.Feedback.SELF_OBSTRUCTED, false);
+				return resetStargate(makeDialAttempt(StargateInfo.Feedback.SELF_OBSTRUCTED), false);
 		}
 		else
-			return disconnectStargate(StargateInfo.Feedback.CONNECTION_ENDED_BY_DISCONNECT, true);
+			return disconnectStargate(makeDialAttempt(StargateInfo.Feedback.CONNECTION_ENDED_BY_DISCONNECT), true);
 		
+	}
+	
+	public StargateInfo.Feedback makeDialAttempt(StargateInfo.Feedback feedback)
+	{
+		dhdInfo().onDialAttempt(feedback, getAddress());
+		return feedback;
 	}
 	
 	public void chevronSound(short chevron, boolean incoming, boolean open, boolean encode)
@@ -1337,27 +1330,27 @@ public abstract class AbstractStargateEntity extends EnergyBlockEntity implement
 	public abstract StargateInfo.ChevronLockSpeed getChevronLockSpeed(boolean doKawoosh);
 	
 	@Override
-	public void getStatus(Player player)
+	public List<Component> getStatus()
 	{
-		if(level.isClientSide())
-			return;
+		List<Component> status = new ArrayList<>();
 		
-		player.sendSystemMessage(Component.translatable("info.sgjourney.point_of_origin").append(Component.literal(": " + symbolInfo().pointOfOrigin())).withStyle(ChatFormatting.DARK_PURPLE));
-		player.sendSystemMessage(Component.translatable("info.sgjourney.symbols").append(Component.literal(": " + symbolInfo().symbols())).withStyle(ChatFormatting.LIGHT_PURPLE));
-		player.sendSystemMessage(Component.translatable("info.sgjourney.times_opened").append(Component.literal(": " + timesOpened)).withStyle(ChatFormatting.BLUE));
-		player.sendSystemMessage(Component.translatable("info.sgjourney.has_dhd").append(Component.literal(": " + dhdInfo().hasDHD())).withStyle(ChatFormatting.GOLD));
-		player.sendSystemMessage(Component.translatable("info.sgjourney.autoclose").append(Component.literal(": " + dhdInfo().autoclose())).withStyle(ChatFormatting.RED));
-		player.sendSystemMessage(Component.translatable("info.sgjourney.last_traveler_time").append(Component.literal(": " + getTimeSinceLastTraveler())).withStyle(ChatFormatting.DARK_PURPLE));
-		player.sendSystemMessage(Component.translatable("info.sgjourney.encoded_address").append(Component.literal(": ").append(address.toComponent(true))).withStyle(ChatFormatting.GREEN));
-		player.sendSystemMessage(Component.translatable("info.sgjourney.recent_feedback").append(Component.literal(": ").append(getRecentFeedback().getFeedbackMessage())).withStyle(ChatFormatting.WHITE));
-
-		player.sendSystemMessage(Component.translatable("info.sgjourney.9_chevron_address").append(": ").withStyle(ChatFormatting.AQUA).append(id9ChevronAddress.toComponent(true)));
-		player.sendSystemMessage(Component.translatable("info.sgjourney.add_to_network").append(Component.literal(": " + (generationStep == Step.GENERATED))).withStyle(ChatFormatting.YELLOW));
+		status.add(Component.translatable("info.sgjourney.point_of_origin").append(Component.literal(": " + symbolInfo().pointOfOrigin())).withStyle(ChatFormatting.DARK_PURPLE));
+		status.add(Component.translatable("info.sgjourney.symbols").append(Component.literal(": " + symbolInfo().symbols())).withStyle(ChatFormatting.LIGHT_PURPLE));
+		status.add(Component.translatable("info.sgjourney.times_opened").append(Component.literal(": " + timesOpened)).withStyle(ChatFormatting.BLUE));
+		status.add(Component.translatable("info.sgjourney.has_dhd").append(Component.literal(": " + dhdInfo().hasDHD())).withStyle(ChatFormatting.GOLD));
+		status.add(Component.translatable("info.sgjourney.autoclose").append(Component.literal(": " + dhdInfo().autoclose())).withStyle(ChatFormatting.RED));
+		status.add(Component.translatable("info.sgjourney.last_traveler_time").append(Component.literal(": " + getTimeSinceLastTraveler())).withStyle(ChatFormatting.DARK_PURPLE));
+		status.add(Component.translatable("info.sgjourney.encoded_address").append(Component.literal(": ").append(address.toComponent(true))).withStyle(ChatFormatting.GREEN));
+		status.add(Component.translatable("info.sgjourney.recent_feedback").append(Component.literal(": ").append(getRecentFeedback().getFeedbackMessage())).withStyle(ChatFormatting.WHITE));
+		
+		status.add(Component.translatable("info.sgjourney.9_chevron_address").append(": ").withStyle(ChatFormatting.AQUA).append(id9ChevronAddress.toComponent(true)));
+		status.add(Component.translatable("info.sgjourney.add_to_network").append(Component.literal(": " + (generationStep == Step.GENERATED))).withStyle(ChatFormatting.YELLOW));
 		if(isPrimary())
-			player.sendSystemMessage(Component.translatable("info.sgjourney.is_primary").withStyle(ChatFormatting.DARK_GREEN));
-		player.sendSystemMessage(ComponentHelper.tickTimer("info.sgjourney.open_time", getOpenTime(), Stargate.getMaxGateOpenTime(), ChatFormatting.DARK_AQUA));
+			status.add(Component.translatable("info.sgjourney.is_primary").withStyle(ChatFormatting.DARK_GREEN));
+		status.add(ComponentHelper.tickTimer("info.sgjourney.open_time", getOpenTime(), SGJourneyStargate.MAX_OPEN_TIME, ChatFormatting.DARK_AQUA));
+		status.add(ComponentHelper.energy("info.sgjourney.energy", getEnergyStored()));
 		
-		super.getStatus(player);
+		return status;
 	}
 	
 	@Override

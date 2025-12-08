@@ -1,10 +1,10 @@
 package net.povstalec.sgjourney.common.items.crystals;
 
 import java.util.List;
-import java.util.UUID;
 
 import net.minecraft.core.Vec3i;
 import net.povstalec.sgjourney.common.misc.Conversion;
+import net.povstalec.sgjourney.common.sgjourney.TransporterID;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.ChatFormatting;
@@ -22,17 +22,21 @@ public class MemoryCrystalItem extends AbstractCrystalItem
 	public static final int DEFAULT_MEMORY_CAPACITY = 5;
 	public static final int ADVANCED_MEMORY_CAPACITY = 2 * DEFAULT_MEMORY_CAPACITY;
 	
-	public static final String MEMORY_LIST = "memory_list";
-
-	public static final String ID = "id";
-	public static final String COORDINATES = "coords";
-	public static final String ADDRESS = "address";
+	public static final int BAR_COLOR_RGB = 0x0095ff;
 	
-	enum MemoryType
+	public static final String MEMORY_LIST = "memory_list";
+	
+	public static final String TEXT = "text";
+	public static final String ADDRESS = Address.ADDRESS;
+	public static final String TRANSPORTER_ID = TransporterID.TRANSPORTER_ID;
+	public static final String COORDINATES = "coords";
+	
+	public enum MemoryType
 	{
 		UNKNOWN(Component.translatable("tooltip.sgjourney.unknown").withStyle(ChatFormatting.DARK_RED)),
+		TEXT(Component.translatable("tooltip.sgjourney.text").withStyle(ChatFormatting.GRAY)),
 		ADDRESS(Component.translatable("tooltip.sgjourney.address").withStyle(ChatFormatting.AQUA)),
-		ID(Component.translatable("tooltip.sgjourney.id").withStyle(ChatFormatting.DARK_AQUA)),
+		TRANSPORTER_ID(Component.translatable("tooltip.sgjourney.transporter_id").withStyle(ChatFormatting.DARK_AQUA)),
 		COORDINATES(Component.translatable("tooltip.sgjourney.coordinates").withStyle(ChatFormatting.BLUE));
 		
 		private final Component component;
@@ -52,16 +56,28 @@ public class MemoryCrystalItem extends AbstractCrystalItem
 	{
 		super(properties);
 	}
+	
+	@Override
+	public boolean isBarVisible(ItemStack stack)
+	{
+		return getMemoryListSize(stack) > 0;
+	}
+	
+	@Override
+	public int getBarWidth(ItemStack stack)
+	{
+		return (int) Math.floor(13.0F * (float) getMemoryListSize(stack) / getMemoryCapacity());
+	}
+	
+	@Override
+	public int getBarColor(ItemStack stack)
+	{
+		return BAR_COLOR_RGB;
+	}
 
 	public int getMemoryCapacity()
 	{
 		return DEFAULT_MEMORY_CAPACITY;
-	}
-
-	@Override
-	public boolean isFoil(ItemStack stack)
-	{
-		return stack.hasTag();
 	}
 
 	/*@Override
@@ -81,10 +97,11 @@ public class MemoryCrystalItem extends AbstractCrystalItem
 	{
 		ListTag list = getMemoryList(stack);
 		
+		tooltipComponents.add(Component.translatable("tooltip.sgjourney.memory_capacity").append(Component.literal(": " + list.size() + '/' + getMemoryCapacity())).withStyle(ChatFormatting.BLUE));
+		
 		for(int i = 0; i < list.size(); i++)
 		{
-			tooltipComponents.add(Component.literal("[" + i + "] ")
-					.append(memoryTypeComponentAt(list, i)));
+			tooltipComponents.add(Component.literal("[" + i + "] ").append(memoryTypeComponentAt(list, i)));
 		}
 
 		super.appendHoverText(stack, level, tooltipComponents, isAdvanced);
@@ -96,8 +113,10 @@ public class MemoryCrystalItem extends AbstractCrystalItem
 			return MemoryType.ADDRESS;
 		else if(list.getCompound(index).contains(COORDINATES, Tag.TAG_INT_ARRAY))
 			return MemoryType.COORDINATES;
-		else if(list.getCompound(index).contains(ID, Tag.TAG_STRING))
-			return MemoryType.ID;
+		else if(list.getCompound(index).contains(TRANSPORTER_ID, Tag.TAG_INT_ARRAY))
+			return MemoryType.TRANSPORTER_ID;
+		else if(list.getCompound(index).contains(TEXT, Tag.TAG_STRING))
+			return MemoryType.TEXT;
 		else
 			return MemoryType.UNKNOWN;
 	}
@@ -113,9 +132,10 @@ public class MemoryCrystalItem extends AbstractCrystalItem
 		
 		return switch(memoryType)
 		{
+			case TEXT -> getText(list, index);
 			case ADDRESS -> getAddress(list, index).toString();
 			case COORDINATES -> getCoords(list, index).toString();
-			case ID -> getUUID(list, index).toString();
+			case TRANSPORTER_ID -> getTransporterID(list, index).toString();
 			default -> "-";
 		};
 	}
@@ -124,41 +144,89 @@ public class MemoryCrystalItem extends AbstractCrystalItem
 	//*************************************Saving and Loading*************************************
 	//============================================================================================
 	
-	private boolean saveMemory(ItemStack stack, CompoundTag memory)
+	private boolean saveMemory(ItemStack stack, CompoundTag memory, boolean overrideOldMemory)
 	{
 		ListTag list = getMemoryList(stack);
 		
-		if(list.size() >= getMemoryCapacity()) //TODO Move old entries forward if needed
+		if(list.size() < getMemoryCapacity())
+		{
+			ListTag newList = new ListTag();
+			newList.add(memory);
+			newList.addAll(list);
+			setMemoryList(stack, newList);
+			return true;
+		}
+		
+		if(!overrideOldMemory)
 			return false;
 		
-		list.add(memory);
-		setMemoryList(stack, list);
+		ListTag newList = new ListTag();
+		newList.add(memory);
+		newList.addAll(list);
+		newList.remove(newList.size() - 1);
+		setMemoryList(stack, newList);
 		
 		return true;
 	}
 	
-	public boolean saveAddress(ItemStack stack, Address.Immutable address)
+	public boolean saveText(ItemStack stack, String text, boolean overrideOldMemory) // TODO Save formatted text
+	{
+		CompoundTag addressTag = new CompoundTag();
+		addressTag.putString(TEXT, text);
+		
+		return saveMemory(stack, addressTag, overrideOldMemory);
+	}
+	
+	public boolean saveAddress(ItemStack stack, Address address, boolean overrideOldMemory)
 	{
 		CompoundTag addressTag = new CompoundTag();
 		addressTag.putIntArray(ADDRESS, address.toArray());
 		
-		return saveMemory(stack, addressTag);
+		return saveMemory(stack, addressTag, overrideOldMemory);
 	}
 	
-	public boolean saveCoords(ItemStack stack, Vec3i coords)
+	public boolean saveCoords(ItemStack stack, Vec3i coords, boolean overrideOldMemory)
 	{
 		CompoundTag coordsTag = new CompoundTag();
 		coordsTag.putIntArray(COORDINATES, Conversion.vecToIntArray(coords));
 		
-		return saveMemory(stack, coordsTag);
+		return saveMemory(stack, coordsTag, overrideOldMemory);
 	}
 	
-	public boolean saveUUID(ItemStack stack, UUID uuid)
+	public boolean saveTransporterID(ItemStack stack, TransporterID transporterID, boolean overrideOldMemory)
 	{
 		CompoundTag uuidTag = new CompoundTag();
-		uuidTag.putString(ID, uuid.toString());
+		uuidTag.putIntArray(TRANSPORTER_ID, transporterID.toArray());
 		
-		return saveMemory(stack, uuidTag);
+		return saveMemory(stack, uuidTag, overrideOldMemory);
+	}
+	
+	@Nullable
+	public static String getText(ListTag list, int index)
+	{
+		if(list.getCompound(index).contains(TEXT, Tag.TAG_STRING))
+			return list.getCompound(index).getString(TEXT);
+		
+		return null;
+	}
+	
+	@Nullable
+	public static String getFirstText(ListTag list)
+	{
+		for(int i = 0; i < list.size(); i++)
+		{
+			String text = getText(list, i);
+			if(text != null)
+				return text;
+		}
+		
+		return null;
+	}
+	
+	@Nullable
+	public static String getFirstText(ItemStack stack)
+	{
+		return getFirstText(getMemoryList(stack));
 	}
 	
 	@Nullable
@@ -218,34 +286,43 @@ public class MemoryCrystalItem extends AbstractCrystalItem
 	}
 	
 	@Nullable
-	public static UUID getUUID(ListTag list, int index)
+	public static TransporterID.Immutable getTransporterID(ListTag list, int index)
 	{
-		if(list.getCompound(index).contains(ID, Tag.TAG_STRING))
-		{
-			try { return UUID.fromString(list.getCompound(index).getString(ID)); }
-			catch(IllegalArgumentException e) { return null; }
-		}
+		if(list.getCompound(index).contains(TRANSPORTER_ID, Tag.TAG_INT_ARRAY))
+			return new TransporterID.Immutable(list.getCompound(index).getIntArray(TRANSPORTER_ID));
 		
 		return null;
 	}
 	
 	@Nullable
-	public static UUID getFirstUUID(ListTag list)
+	public static TransporterID.Immutable getFirstTransporterID(ListTag list)
 	{
 		for(int i = 0; i < list.size(); i++)
 		{
-			UUID uuid = getUUID(list, i);
-			if(uuid != null)
-				return uuid;
+			TransporterID.Immutable transporterID = getTransporterID(list, i);
+			if(transporterID != null)
+				return transporterID;
 		}
 		
 		return null;
 	}
 	
 	@Nullable
-	public static UUID getFirstUUID(ItemStack stack)
+	public static TransporterID.Immutable getFirstTransporterID(ItemStack stack)
 	{
-		return getFirstUUID(getMemoryList(stack));
+		return getFirstTransporterID(getMemoryList(stack));
+	}
+	
+	public static int getMemoryListSize(ItemStack stack)
+	{
+		if(stack.getItem() instanceof MemoryCrystalItem)
+		{
+			CompoundTag tag = stack.getTag();
+			if(tag != null && tag.contains(MEMORY_LIST, Tag.TAG_LIST))
+				return tag.getList(MEMORY_LIST, Tag.TAG_COMPOUND).size();
+		}
+		
+		return 0;
 	}
 	
 	public static ListTag getMemoryList(ItemStack stack)

@@ -31,6 +31,8 @@ public class SGJourneyStargate implements Stargate
 	
 	public static final int KAWOOSH_TICKS = 40;
 	
+	public static final int MAX_OPEN_TIME = CommonStargateConfig.max_wormhole_open_time.get() * 20;
+	
 	protected Address.Immutable address;
 	
 	@Nullable
@@ -44,8 +46,11 @@ public class SGJourneyStargate implements Stargate
 	protected int timesOpened;
 	protected int network;
 	
+	@Nullable
 	protected Vec3 forward = null;
+	@Nullable
 	protected Vec3 up = null;
+	@Nullable
 	protected Vec3 right = null;
 	
 	protected Wormhole wormhole = new Wormhole();
@@ -513,6 +518,12 @@ public class SGJourneyStargate implements Stargate
 					
 					return connection.getTimeSinceLastTraveler() > stargate.dhdInfo().autoclose() * 20;
 				}, false); //TODO Maybe move the "* 20" into DHD info?
+	}
+	
+	@Override
+	public boolean requiresEnergyBypass(MinecraftServer server, int openTime)
+	{
+		return openTime > MAX_OPEN_TIME;
 	}
 	
 	// Saving and loading

@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.povstalec.sgjourney.common.items.crystals.MemoryCrystalItem;
 import net.povstalec.sgjourney.common.misc.CoordinateHelper;
 import net.povstalec.sgjourney.common.misc.LocatorHelper;
+import net.povstalec.sgjourney.common.sgjourney.TransporterID;
 import net.povstalec.sgjourney.common.sgjourney.Transporting;
 import net.povstalec.sgjourney.common.sgjourney.transporter.Transporter;
 import org.jetbrains.annotations.NotNull;
@@ -202,8 +203,8 @@ public class RingPanelEntity extends TransporterControllerEntity
 		
 		if(stack.getItem() instanceof MemoryCrystalItem)
 		{
-			UUID uuid = MemoryCrystalItem.getFirstUUID(stack);
-			Transporting.startTransport(level.getServer(), transportRings.getTransporter(), uuid);
+			TransporterID transporterID = MemoryCrystalItem.getFirstTransporterID(stack);
+			Transporting.startTransport(level.getServer(), transportRings.getTransporter(), transporterID);
 		}
 		else
 		{

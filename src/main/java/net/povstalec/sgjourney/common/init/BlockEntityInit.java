@@ -66,10 +66,12 @@ public class BlockEntityInit
 	public static final RegistryObject<BlockEntityType<SymbolBlockEntity.RedSandstone>> RED_SANDSTONE_SYMBOL = BLOCK_ENTITIES.register("red_sandstone_symbol",
 			() -> BlockEntityType.Builder.of(SymbolBlockEntity.RedSandstone::new, BlockInit.RED_SANDSTONE_SYMBOL.get()).build(null));
 	
-	public static final RegistryObject<BlockEntityType<NaquadahGeneratorMarkIEntity>> NAQUADAH_GENERATOR_MARK_I = BLOCK_ENTITIES.register("naquadah_generator_mark_i",
-            () -> BlockEntityType.Builder.of(NaquadahGeneratorMarkIEntity::new, BlockInit.NAQUADAH_GENERATOR_MARK_I.get()).build(null));
-	public static final RegistryObject<BlockEntityType<NaquadahGeneratorMarkIIEntity>> NAQUADAH_GENERATOR_MARK_II = BLOCK_ENTITIES.register("naquadah_generator_mark_ii",
-            () -> BlockEntityType.Builder.of(NaquadahGeneratorMarkIIEntity::new, BlockInit.NAQUADAH_GENERATOR_MARK_II.get()).build(null));
+	public static final RegistryObject<BlockEntityType<NaquadahGeneratorEntity.Reactor>> NAQUADAH_REACTOR = BLOCK_ENTITIES.register("naquadah_reactor",
+			() -> BlockEntityType.Builder.of(NaquadahGeneratorEntity.Reactor::new, BlockInit.NAQUADAH_REACTOR.get()).build(null));
+	public static final RegistryObject<BlockEntityType<NaquadahGeneratorEntity.MarkI>> NAQUADAH_GENERATOR_MARK_I = BLOCK_ENTITIES.register("naquadah_generator_mark_i",
+            () -> BlockEntityType.Builder.of(NaquadahGeneratorEntity.MarkI::new, BlockInit.NAQUADAH_GENERATOR_MARK_I.get()).build(null));
+	public static final RegistryObject<BlockEntityType<NaquadahGeneratorEntity.MarkII>> NAQUADAH_GENERATOR_MARK_II = BLOCK_ENTITIES.register("naquadah_generator_mark_ii",
+            () -> BlockEntityType.Builder.of(NaquadahGeneratorEntity.MarkII::new, BlockInit.NAQUADAH_GENERATOR_MARK_II.get()).build(null));
 	
 	public static final RegistryObject<BlockEntityType<BasicInterfaceEntity>> BASIC_INTERFACE = BLOCK_ENTITIES.register("basic_interface",
             () -> BlockEntityType.Builder.of(BasicInterfaceEntity::new, BlockInit.BASIC_INTERFACE.get()).build(null));

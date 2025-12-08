@@ -8,7 +8,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.povstalec.sgjourney.common.block_entities.tech_interface.AbstractInterfaceEntity;
-import net.povstalec.sgjourney.common.config.CommonStargateConfig;
 import net.povstalec.sgjourney.common.data.Universe;
 import net.povstalec.sgjourney.common.misc.CoordinateHelper;
 import net.povstalec.sgjourney.common.sgjourney.*;
@@ -418,6 +417,14 @@ public interface Stargate
 	 */
 	boolean shouldAutoclose(MinecraftServer server, StargateConnection connection);
 	
+	/**
+	 * Checks if the current Stargate Connection has reached the point of energy bypass (like going past the canonical 38 minute mark)
+	 * @param server Current Minecraft Server
+	 * @param openTime Time since the wormhole formed (after kawoosh ended)
+	 * @return True if the Stargate has reached a point where it requires extra energy to bypass the max wormhole open time, otherwise false
+	 */
+	boolean requiresEnergyBypass(MinecraftServer server, int openTime);
+	
 	// Saving and loading
 	
 	/**
@@ -432,11 +439,4 @@ public interface Stargate
 	 * @param tag CompoundTag containing information to be deserialized
 	 */
 	void deserializeNBT(MinecraftServer server, Address.Immutable address, CompoundTag tag);
-	
-	
-	
-	static int getMaxGateOpenTime()
-	{
-		return CommonStargateConfig.max_wormhole_open_time.get() * 20;
-	}
 }

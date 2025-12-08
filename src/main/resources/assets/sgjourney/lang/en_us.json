@@ -520,14 +520,19 @@
 	"info.sgjourney.address_table": "Address Table",
 	"info.sgjourney.energy": "Energy",
 	
+	"tooltip.sgjourney.unknown": "Unknown",
+	"tooltip.sgjourney.text": "Text",
 	"tooltip.sgjourney.symbol": "Symbol",
 	"tooltip.sgjourney.symbols": "Symbols",
 	"tooltip.sgjourney.point_of_origin": "Point of Origin",
 	"tooltip.sgjourney.address": "Address",
 	"tooltip.sgjourney.9_chevron_address": "9-Chevron Address",
+	"tooltip.sgjourney.transporter_id": "Transporter ID",
+	"tooltip.sgjourney.coords": "Coordinates",
 	"tooltip.sgjourney.energy": "Energy",
 	"tooltip.sgjourney.energy_buffer": "Energy Buffer",
 	"tooltip.sgjourney.energy_target": "Energy Target",
+	"tooltip.sgjourney.memory_capacity": "Memory Capacity",
 	"tooltip.sgjourney.fluid": "Fluid",
 	"tooltip.sgjourney.holding": "Holding",
 	"tooltip.sgjourney.dimension": "Dimension",
@@ -749,6 +754,8 @@
 	"message.sgjourney.gdo.shielded": "Shielded",
 	"message.sgjourney.gdo.error.no_nearby_stargate": "No nearby Stargate",
 	"message.sgjourney.gdo.error.stargate_not_connected": "Stargate is not connected",
+	
+	"message.sgjourney.memory_crystal.saved.transporter_id": "Saved Transporter ID",
 	
 	"gui.sgjourney.config": "Stargate Journey Config",
 	"gui.sgjourney.client": "Client",

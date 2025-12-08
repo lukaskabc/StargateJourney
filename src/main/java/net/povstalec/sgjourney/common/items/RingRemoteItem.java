@@ -5,11 +5,10 @@ import java.util.*;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.povstalec.sgjourney.common.block_entities.transporter.AbstractTransporterEntity;
 import net.povstalec.sgjourney.common.data.TransporterNetwork;
-import net.povstalec.sgjourney.common.misc.Conversion;
+import net.povstalec.sgjourney.common.sgjourney.TransporterID;
 import net.povstalec.sgjourney.common.sgjourney.transporter.Transporter;
 import org.jetbrains.annotations.Nullable;
 
@@ -131,7 +130,7 @@ public class RingRemoteItem extends Item
 						
 						//TODO Transport based on coords, let players choose from the list of transport locations
 						if(crystalStack.getItem() instanceof MemoryCrystalItem crystal)
-							tryStartTransport(level, player, transporterFromUUID(level, crystal.getFirstUUID(crystalStack)));
+							tryStartTransport(level, player, transporterFromID(level, crystal.getFirstTransporterID(crystalStack)));
 						else
 							player.displayClientMessage(Component.translatable("message.sgjourney.ring_remote.error.no_coordinates").withStyle(ChatFormatting.BLUE), true);
 					});
@@ -143,9 +142,9 @@ public class RingRemoteItem extends Item
     }
 	
 	@Nullable
-	private static Transporter transporterFromUUID(Level level, UUID uuid)
+	private static Transporter transporterFromID(Level level, TransporterID transporterID)
 	{
-		return TransporterNetwork.get(level).getTransporter(uuid);
+		return TransporterNetwork.get(level).getTransporter(transporterID);
 	}
 	
 	@Nullable
@@ -231,9 +230,9 @@ public class RingRemoteItem extends Item
 					.append(Component.literal(" " + coords.toShortString())).withStyle(ChatFormatting.BLUE);
 		}
 		
-		UUID id = MemoryCrystalItem.getUUID(list, index);
-		if(id != null)
-			return Component.literal(id.toString()).withStyle(ChatFormatting.DARK_AQUA);
+		TransporterID transporterID = MemoryCrystalItem.getTransporterID(list, index);
+		if(transporterID != null)
+			return Component.literal(transporterID.toString()).withStyle(ChatFormatting.DARK_AQUA);
 		else
 			return Component.translatable("tooltip.sgjourney.corrupt_data").withStyle(ChatFormatting.DARK_RED);
 	}

@@ -26,7 +26,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.povstalec.sgjourney.common.block_entities.tech.NaquadahGeneratorEntity;
-import net.povstalec.sgjourney.common.block_entities.tech.NaquadahGeneratorMarkIEntity;
 import net.povstalec.sgjourney.common.config.CommonNaquadahGeneratorConfig;
 import net.povstalec.sgjourney.common.init.BlockEntityInit;
 import net.povstalec.sgjourney.common.init.BlockInit;
@@ -68,7 +67,7 @@ public class NaquadahGeneratorMarkIBlock extends NaquadahGeneratorBlock
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
 	{
-		return new NaquadahGeneratorMarkIEntity(pos, state);
+		return new NaquadahGeneratorEntity.MarkI(pos, state);
 	}
 	
 	@Override

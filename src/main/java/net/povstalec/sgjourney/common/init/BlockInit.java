@@ -208,6 +208,9 @@ public class BlockInit
 	public static final RegistryObject<SymbolBlock> STONE_SYMBOL = registerBlock("stone_symbol", 
 			() -> new SymbolBlock.Stone(BlockBehaviour.Properties.of(Material.STONE).strength(1.5F, 6.0F).requiresCorrectToolForDrops()));
 	
+	public static final RegistryObject<NaquadahGeneratorMarkIBlock> NAQUADAH_REACTOR = registerEnergyBlock("naquadah_reactor",
+			() -> new NaquadahGeneratorMarkIBlock(BlockBehaviour.Properties.of(Material.METAL).strength(5.0F, 6.0F)),
+			() -> CommonNaquadahGeneratorConfig.naquadah_reactor_capacity.get(), Rarity.COMMON);
 	public static final RegistryObject<NaquadahGeneratorMarkIBlock> NAQUADAH_GENERATOR_MARK_I = registerEnergyBlock("naquadah_generator_mark_i",
 			() -> new NaquadahGeneratorMarkIBlock(BlockBehaviour.Properties.of(Material.METAL).strength(5.0F, 6.0F)),
 			() -> CommonNaquadahGeneratorConfig.naquadah_generator_mark_i_capacity.get(), Rarity.COMMON);

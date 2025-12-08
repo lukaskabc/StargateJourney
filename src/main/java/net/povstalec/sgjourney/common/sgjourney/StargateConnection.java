@@ -44,7 +44,6 @@ public class StargateConnection
 	
 	public static final int KAWOOSH_DURATION = 40;
 	
-	protected static final int MAX_OPEN_TIME = CommonStargateConfig.max_wormhole_open_time.get() * 20;
 	protected static final boolean ENERGY_BYPASS_ENABLED = CommonStargateConfig.enable_energy_bypass.get();
 	protected static final boolean REQUIRE_ENERGY = !StargateJourneyConfig.disable_energy_use.get();
 	
@@ -68,7 +67,7 @@ public class StargateConnection
 	
 	protected boolean used;
 	protected int connectionTime; // Time since the connection was established (Right after dialing Stargate finished dialing)
-	protected int openTime; // Time since wormhole formed (after kawoosh ended)
+	protected int openTime; // Time since the wormhole formed (after kawoosh ended)
 	protected int timeSinceLastTraveler; // Time since a traveler has last appeared near any of the connected Stargates
 	
 	@Nullable
@@ -335,6 +334,11 @@ public class StargateConnection
 		return false;
 	}
 	
+	private boolean requiresEnergyBypass(MinecraftServer server, int openTime)
+	{
+		return this.dialingStargate.requiresEnergyBypass(server, openTime) || this.dialedStargate.requiresEnergyBypass(server, openTime);
+	}
+	
 	public final void tick(MinecraftServer server)
 	{
 		if(!isStargateValid(server, this.dialingStargate) || !isStargateValid(server, this.dialedStargate))
@@ -369,14 +373,14 @@ public class StargateConnection
 		this.dialingStargate.doWhileConnected(server, this, false);
 		this.dialedStargate.doWhileConnected(server, this, true);
 		
-		if(this.openTime >= MAX_OPEN_TIME && !ENERGY_BYPASS_ENABLED)
+		if(requiresEnergyBypass(server, this.openTime) && !ENERGY_BYPASS_ENABLED)
 		{
 			terminate(server, StargateInfo.Feedback.EXCEEDED_CONNECTION_TIME);
 			return;
 		}
 		
 		// Depletes energy over time
-		if(REQUIRE_ENERGY && !depleteEnergy(server, getPowerDraw()))
+		if(REQUIRE_ENERGY && !depleteEnergy(server, getPowerDraw(server)))
 		{
 			terminate(server, StargateInfo.Feedback.RAN_OUT_OF_POWER);
 			return;
@@ -515,9 +519,9 @@ public class StargateConnection
 		return this.doKawoosh;
 	}
 	
-	public long getPowerDraw()
+	public long getPowerDraw(MinecraftServer server)
 	{
-		return this.connectionType.getPowerDraw(this.openTime >= MAX_OPEN_TIME);
+		return this.connectionType.getPowerDraw(requiresEnergyBypass(server, this.openTime));
 	}
 	
 	//============================================================================================

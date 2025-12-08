@@ -67,9 +67,14 @@ public abstract class Address implements Cloneable
 	
 	public Address(List<Integer> addressList)
 	{
-		this(integerListToArray(addressList));
+		this(ArrayHelper.integerListToArray(addressList));
 	}
 	
+	/**
+	 * Verifies the validity of the provided Address array
+	 * @param addressArray Integer Array representing the Address
+	 * @throws IllegalArgumentException Throws an exception if the provided array is not a valid Address array
+	 */
 	public static void verifyValidity(int[] addressArray) throws IllegalArgumentException
 	{
 		if(addressArray.length > MAX_ADDRESS_LENGTH)
@@ -207,7 +212,7 @@ public abstract class Address implements Cloneable
 		}
 		catch(CloneNotSupportedException e)
 		{
-			StargateJourney.LOGGER.error("Could not clone Address" + e);
+			StargateJourney.LOGGER.error("Could not clone Address {}", String.valueOf(e));
 			return null;
 		}
 	}
@@ -253,16 +258,14 @@ public abstract class Address implements Cloneable
 	
 	private static boolean isAllowedInAddress(char character)
 	{
-		return character == '-' || (character >= '0' && character <= '9');
+		return character == '-' || Character.isDigit(character);
 	}
 	
 	public static boolean canBeTransformedToAddress(String addressString)
 	{
 		for(int i = 0; i < addressString.length(); i++)
 		{
-			char character = addressString.charAt(i);
-			
-			if(!Character.isDigit(character) && character != '-')
+			if(!isAllowedInAddress(addressString.charAt(i)))
 				return false;
 		}
 		
@@ -292,18 +295,13 @@ public abstract class Address implements Cloneable
 	
 	public static String addressIntArrayToString(int[] array)
 	{
-		String address = ADDRESS_DIVIDER;
+		StringBuilder address = new StringBuilder(ADDRESS_DIVIDER);
 		
 		for(int symbol : array)
 		{
-			address = address + symbol + ADDRESS_DIVIDER;
+			address.append(symbol).append(ADDRESS_DIVIDER);
 		}
-		return address;
-	}
-	
-	public static int[] integerListToArray(List<Integer> integerList)
-	{
-		return integerList.stream().mapToInt((integer) -> integer).toArray();
+		return address.toString();
 	}
 	
 	public static int[] randomAddressArray(int prefix, int size, int limit, long seed)
@@ -340,7 +338,7 @@ public abstract class Address implements Cloneable
 		ADDRESS_8_CHEVRON((byte) 8),
 		ADDRESS_7_CHEVRON((byte) 7);
 		
-		private byte value;
+		private final byte value;
 		
 		Type(byte value)
 		{
@@ -542,7 +540,7 @@ public abstract class Address implements Cloneable
 			}
 			catch(IllegalArgumentException e)
 			{
-				StargateJourney.LOGGER.error("Error parsing address " + addressIntArrayToString(addressArray), e);
+				StargateJourney.LOGGER.error("Error parsing address {}", addressIntArrayToString(addressArray), e);
 			}
 			
 			return this;
@@ -565,7 +563,7 @@ public abstract class Address implements Cloneable
 		
 		public Mutable fromIntegerList(List<Integer> integerList)
 		{
-			return fromArray(integerListToArray(integerList));
+			return fromArray(ArrayHelper.integerListToArray(integerList));
 		}
 		
 		@Override
@@ -656,7 +654,8 @@ public abstract class Address implements Cloneable
 					address = new Address.Immutable();
 			}
 			
-			this.addressArray = address.addressArray.clone();
+			if(address != null)
+				this.addressArray = address.addressArray.clone();
 		}
 		
 		@Override

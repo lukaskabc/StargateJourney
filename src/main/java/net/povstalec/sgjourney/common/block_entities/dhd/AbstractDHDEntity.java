@@ -25,6 +25,7 @@ import net.povstalec.sgjourney.common.config.StargateJourneyConfig;
 import net.povstalec.sgjourney.common.items.ZeroPointModule;
 import net.povstalec.sgjourney.common.items.energy_cores.IEnergyCore;
 import net.povstalec.sgjourney.common.misc.LocatorHelper;
+import net.povstalec.sgjourney.common.sgjourney.StargateInfo;
 import net.povstalec.sgjourney.common.sgjourney.info.SymbolInfo;
 import org.jetbrains.annotations.NotNull;
 
@@ -625,6 +626,8 @@ public abstract class AbstractDHDEntity extends EnergyBlockEntity implements Str
 	
 	protected abstract SoundEvent getPressSound();
 	
+	public abstract void onDialAttempt(StargateInfo.Feedback feedback, Address address);
+	
 	/**
 	 * Engages the next Stargate chevron
 	 * @param symbol
@@ -645,6 +648,7 @@ public abstract class AbstractDHDEntity extends EnergyBlockEntity implements Str
 				level.playSound(null, this.getBlockPos(), getPressSound(), SoundSource.BLOCKS, 0.25F, 1F);
 			
 			stargate.dhdEngageSymbol(symbol);
+			
 			depleteEnergy(buttonPressEnergyCost(), false);
 		}
 		else

@@ -40,8 +40,8 @@ public class CrystalReaderItem extends Item
 			{
 				if(transporter.getID() != null)
 				{
-					memoryCrystal.saveUUID(mainHandItem, transporter.getID());
-					player.displayClientMessage(Component.translatable("message.sgjourney.memory_crystal.saved_id").withStyle(ChatFormatting.BLUE), true);
+					memoryCrystal.saveTransporterID(mainHandItem, transporter.getID(), false);
+					player.displayClientMessage(Component.translatable("message.sgjourney.memory_crystal.saved.transporter_id").withStyle(ChatFormatting.BLUE), true);
 					return InteractionResult.SUCCESS;
 				}
 			}
