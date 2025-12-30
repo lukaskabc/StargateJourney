@@ -26,21 +26,26 @@ import net.povstalec.sgjourney.common.misc.InventoryUtil;
 
 public class TabInit
 {
+	public static final ResourceLocation STARGATE_ITEMS_LOCATION = ResourceLocation.tryBuild(StargateJourney.MODID, "stargate_items");
+	public static final ResourceLocation STARGATE_STUFF_LOCATION = ResourceLocation.tryBuild(StargateJourney.MODID, "stargate_stuff");
+	public static final ResourceLocation STARGATE_BLOCKS_LOCATION = ResourceLocation.tryBuild(StargateJourney.MODID, "stargate_blocks");
+	
 	public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =  DeferredRegister.create(Registries.CREATIVE_MODE_TAB, StargateJourney.MODID);
 	
-	public static RegistryObject<CreativeModeTab> STARGATE_ITEMS = CREATIVE_MODE_TABS.register("stargate_items", () ->
-		CreativeModeTab.builder().icon(() -> new ItemStack(ItemInit.NAQUADAH.get()))
-		.title(Component.translatable("itemGroup.stargate_items")).build());
-
-	public static RegistryObject<CreativeModeTab> STARGATE_STUFF = CREATIVE_MODE_TABS.register("stargate_stuff", () ->
-		CreativeModeTab.builder().icon(() -> new ItemStack(BlockInit.MILKY_WAY_STARGATE.get()))
-		.title(Component.translatable("itemGroup.stargate_stuff"))
-		.withTabsBefore(new ResourceLocation(StargateJourney.MODID, "stargate_blocks")).withTabsAfter(new ResourceLocation(StargateJourney.MODID, "stargate_items"))
-		.build());
-
-	public static RegistryObject<CreativeModeTab> STARGATE_BLOCKS = CREATIVE_MODE_TABS.register("stargate_blocks", () ->
-		CreativeModeTab.builder().icon(() -> new ItemStack(BlockInit.NAQUADAH_BLOCK.get()))
-		.title(Component.translatable("itemGroup.stargate_blocks")).build());
+	public static final RegistryObject<CreativeModeTab> STARGATE_BLOCKS = CREATIVE_MODE_TABS.register("stargate_blocks", () ->
+			CreativeModeTab.builder().icon(() -> new ItemStack(BlockInit.NAQUADAH_BLOCK.get()))
+					.title(Component.translatable("itemGroup.stargate_blocks")).build());
+	
+	public static final RegistryObject<CreativeModeTab> STARGATE_STUFF = CREATIVE_MODE_TABS.register("stargate_stuff", () ->
+			CreativeModeTab.builder().icon(() -> new ItemStack(BlockInit.MILKY_WAY_STARGATE.get()))
+					.title(Component.translatable("itemGroup.stargate_stuff"))
+					.withTabsBefore(STARGATE_BLOCKS_LOCATION)
+					.build());
+	
+	public static final RegistryObject<CreativeModeTab> STARGATE_ITEMS = CREATIVE_MODE_TABS.register("stargate_items", () ->
+			CreativeModeTab.builder().icon(() -> new ItemStack(ItemInit.NAQUADAH.get()))
+					.title(Component.translatable("itemGroup.stargate_items"))
+					.withTabsBefore(STARGATE_STUFF_LOCATION).build());
 	
 	@SubscribeEvent
 	public static void addCreative(final BuildCreativeModeTabContentsEvent event)
