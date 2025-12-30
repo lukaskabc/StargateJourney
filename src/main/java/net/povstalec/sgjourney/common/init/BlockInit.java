@@ -210,10 +210,10 @@ public class BlockInit
 			() -> new SymbolBlock.Stone(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5F, 6.0F).requiresCorrectToolForDrops()));
 	
 	public static final DeferredBlock<NaquadahGeneratorMarkIBlock> NAQUADAH_GENERATOR_MARK_I = registerEnergyBlock("naquadah_generator_mark_i",
-			() -> new NaquadahGeneratorMarkIBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F)),
+			() -> new NaquadahGeneratorMarkIBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).forceSolidOn()),
 			() -> CommonNaquadahGeneratorConfig.naquadah_generator_mark_i_capacity.get(), Rarity.COMMON);
 	public static final DeferredBlock<NaquadahGeneratorMarkIIBlock> NAQUADAH_GENERATOR_MARK_II = registerEnergyBlock("naquadah_generator_mark_ii",
-			() -> new NaquadahGeneratorMarkIIBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F)),
+			() -> new NaquadahGeneratorMarkIIBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).forceSolidOn()),
 			() -> CommonNaquadahGeneratorConfig.naquadah_generator_mark_ii_capacity.get(), Rarity.COMMON);
 	
 	public static final DeferredBlock<BasicInterfaceBlock> BASIC_INTERFACE = registerEnergyBlock("basic_interface",
