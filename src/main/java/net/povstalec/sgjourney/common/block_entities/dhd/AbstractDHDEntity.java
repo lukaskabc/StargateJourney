@@ -24,6 +24,7 @@ import net.povstalec.sgjourney.common.config.CommonStargateConfig;
 import net.povstalec.sgjourney.common.config.StargateJourneyConfig;
 import net.povstalec.sgjourney.common.items.ZeroPointModule;
 import net.povstalec.sgjourney.common.items.energy_cores.IEnergyCore;
+import net.povstalec.sgjourney.common.misc.InventoryUtil;
 import net.povstalec.sgjourney.common.misc.LocatorHelper;
 import net.povstalec.sgjourney.common.sgjourney.StargateInfo;
 import net.povstalec.sgjourney.common.sgjourney.info.SymbolInfo;
@@ -55,6 +56,8 @@ import javax.annotation.Nullable;
 
 public abstract class AbstractDHDEntity extends EnergyBlockEntity implements StructureGenEntity, SymbolInfo.Interface, ProtectedBlockEntity
 {
+	protected static final boolean REQUIRE_ENERGY = !StargateJourneyConfig.disable_energy_use.get();
+	
 	public static final String POINT_OF_ORIGIN = "point_of_origin";
 	public static final String SYMBOLS = "symbols";
 	
@@ -184,7 +187,7 @@ public abstract class AbstractDHDEntity extends EnergyBlockEntity implements Str
 	{
 		CompoundTag tag = new CompoundTag();
 		
-		tag.putLong(ENERGY, ENERGY_STORAGE.getTrueEnergyStored());
+		tag.putLong(ENERGY, energyStorage.getTrueEnergyStored());
 		
 		tag.putString(POINT_OF_ORIGIN, symbolInfo().pointOfOrigin().toString());
 		tag.putString(SYMBOLS, symbolInfo().symbols().toString());
@@ -201,7 +204,7 @@ public abstract class AbstractDHDEntity extends EnergyBlockEntity implements Str
 		CompoundTag tag = packet.getTag();
 		if(tag != null)
 		{
-			ENERGY_STORAGE.setEnergy(tag.getLong(ENERGY));
+			energyStorage.setEnergy(tag.getLong(ENERGY));
 			
 			if(tag.contains(POINT_OF_ORIGIN))
 				symbolInfo().setPointOfOrigin(new ResourceLocation(tag.getString(POINT_OF_ORIGIN)));
@@ -441,18 +444,6 @@ public abstract class AbstractDHDEntity extends EnergyBlockEntity implements Str
 		return CommonDHDConfig.milky_way_dhd_max_energy_extract.get();
 	}
 	
-	private boolean stackHasEnergy(ItemStack stack)
-	{
-		if(stack.getCapability(ForgeCapabilities.ENERGY).isPresent())
-		{
-			IEnergyStorage energyStorage = stack.getCapability(ForgeCapabilities.ENERGY).resolve().get();
-			
-			return energyStorage.canExtract() && energyStorage.getEnergyStored() > 0;
-		}
-		
-		return false;
-	}
-	
 	private void tryStoreEnergy(ItemStack energyStack)
 	{
 		ItemStack inputStack = energyItemHandler.getStackInSlot(1);
@@ -491,7 +482,7 @@ public abstract class AbstractDHDEntity extends EnergyBlockEntity implements Str
 			long needed = SGJourneyEnergy.energyToTarget(getEnergyTarget(), stargate.getEnergyStored(), maxEnergyDeplete());
 			
 			// Uses energy from a Energy Item if one is present
-			if (stackHasEnergy(energyStack))
+			if(InventoryUtil.stackHasEnergy(energyStack))
 			{
 				IEnergyStorage energyStorage = energyStack.getCapability(ForgeCapabilities.ENERGY).resolve().get();
 				
@@ -636,7 +627,7 @@ public abstract class AbstractDHDEntity extends EnergyBlockEntity implements Str
 	{
 		if(this.stargate != null)
 		{
-			if(!StargateJourneyConfig.disable_energy_use.get() && getEnergyStored() < buttonPressEnergyCost())
+			if(REQUIRE_ENERGY && getEnergyStored() < buttonPressEnergyCost())
 			{
 				sendMessageToNearbyPlayers(Component.translatable("message.sgjourney.dhd.error.not_enough_energy").withStyle(ChatFormatting.DARK_RED), 5);
 				return;
@@ -645,11 +636,12 @@ public abstract class AbstractDHDEntity extends EnergyBlockEntity implements Str
 			if(symbol == 0)
 				level.playSound(null, this.getBlockPos(), getEnterSound(), SoundSource.BLOCKS, 0.5F, 1F);
 			else
-				level.playSound(null, this.getBlockPos(), getPressSound(), SoundSource.BLOCKS, 0.25F, 1F);
+				level.playSound(null, this.getBlockPos(), getPressSound(), SoundSource.BLOCKS, 0.5F, 1F);
 			
 			stargate.dhdEngageSymbol(symbol);
 			
-			depleteEnergy(buttonPressEnergyCost(), false);
+			if(REQUIRE_ENERGY)
+				depleteEnergy(buttonPressEnergyCost(), false);
 		}
 		else
 			sendMessageToNearbyPlayers(Component.translatable("message.sgjourney.dhd.error.not_connected_to_stargate").withStyle(ChatFormatting.DARK_RED), 5);
@@ -668,12 +660,6 @@ public abstract class AbstractDHDEntity extends EnergyBlockEntity implements Str
 		dhd.outputEnergy(null);
 		dhd.updateClient();
     }
-	
-	public void updateClient()
-	{
-		if(!level.isClientSide())
-			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
-	}
 	
 	//============================================================================================
 	//*****************************************Generation*****************************************

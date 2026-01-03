@@ -101,20 +101,9 @@ public final class TransporterNetwork extends SavedData
 		transporters.entrySet().stream().forEach((transporterInfo) ->
 		{
 			Transporter transporter = transporterInfo.getValue();
-			BlockEntity blockentity = server.getLevel(transporter.getDimension()).getBlockEntity(transporter.getBlockPos());
 			
-			if(blockentity instanceof AbstractTransporterEntity transporterEntity)
-			{
-				if(transporterEntity.getID() != null && transporterEntity.getID().equals(transporter.getID()))
-					addTransporterToDimension(transporter.getDimension(), transporter);
-				else
-				{
-					BlockEntityList.get(server).removeTransporter(transporter.getID());
-					addTransporter(transporterEntity);
-				}
-			}
-			else
-				BlockEntityList.get(server).removeTransporter(transporter.getID());
+			if(transporter != null)
+				addTransporter(transporter);
 		});
 	}
 	

@@ -384,12 +384,6 @@ public abstract class AbstractCrystallizerEntity extends EnergyBlockEntity
 
 	protected abstract void crystallize();
 	
-	public void updateClient()
-	{
-		if(!level.isClientSide())
-			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
-	}
-	
 	public static void tick(Level level, BlockPos pos, BlockState state, AbstractCrystallizerEntity crystallizer)
 	{
 		if(level.isClientSide())

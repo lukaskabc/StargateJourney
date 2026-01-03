@@ -25,6 +25,8 @@ public abstract class CableBlockEntity extends BlockEntity
 {
 	public static final String NETWORK_ID = "network_id";
 	
+	
+	public final SGJourneyEnergy energyStorage = createEnergyStorage();
 	private LazyOptional<IEnergyStorage> lazyEnergyHandler = LazyOptional.empty();
 	
 	private int networkID = 0;
@@ -41,7 +43,7 @@ public abstract class CableBlockEntity extends BlockEntity
 	public void onLoad()
 	{
 		super.onLoad();
-		lazyEnergyHandler = LazyOptional.of(() -> ENERGY_STORAGE);
+		lazyEnergyHandler = LazyOptional.of(() -> energyStorage);
 	}
 	
 	@Override
@@ -67,44 +69,47 @@ public abstract class CableBlockEntity extends BlockEntity
 	
 	public abstract long maxTransfer();
 	
-	public final SGJourneyEnergy ENERGY_STORAGE = new SGJourneyEnergy(maxTransfer(), maxTransfer(), maxTransfer())
+	protected SGJourneyEnergy createEnergyStorage()
 	{
-		@Override
-		public long receiveLongEnergy(long maxReceive, boolean simulate)
+		return new SGJourneyEnergy(maxTransfer(), maxTransfer(), maxTransfer())
 		{
-			return transferEnergy(Math.min(maxTransfer(), maxReceive), simulate, false);
-		}
-		
-		@Override
-		public long receiveZeroPointEnergy(long maxReceive, boolean simulate)
-		{
-			return transferEnergy(Math.min(maxTransfer(), maxReceive), simulate, true);
-		}
-		
-		@Override
-		public int extractEnergy(int maxExtract, boolean simulate)
-		{
-			return 0;
-		}
-		
-		@Override
-		public boolean canExtract()
-		{
-			return false;
-		}
-		
-		@Override
-		public boolean canReceive()
-		{
-			return true;
-		}
-		
-		@Override
-		public void onEnergyChanged(long difference, boolean simulate)
-		{
-			setChanged();
-		}
-	};
+			@Override
+			public long receiveLongEnergy(long maxReceive, boolean simulate)
+			{
+				return transferEnergy(Math.min(maxTransfer(), maxReceive), simulate, false);
+			}
+			
+			@Override
+			public long receiveZeroPointEnergy(long maxReceive, boolean simulate)
+			{
+				return transferEnergy(Math.min(maxTransfer(), maxReceive), simulate, true);
+			}
+			
+			@Override
+			public int extractEnergy(int maxExtract, boolean simulate)
+			{
+				return 0;
+			}
+			
+			@Override
+			public boolean canExtract()
+			{
+				return false;
+			}
+			
+			@Override
+			public boolean canReceive()
+			{
+				return true;
+			}
+			
+			@Override
+			public void onEnergyChanged(long difference, boolean simulate)
+			{
+				setChanged();
+			}
+		};
+	}
 	
 	public void setNetworkID(int networkID)
 	{
@@ -233,7 +238,7 @@ public abstract class CableBlockEntity extends BlockEntity
 	@Override
 	public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, Direction side)
 	{
-		if(capability == ForgeCapabilities.ENERGY)
+		if(capability == ForgeCapabilities.ENERGY && side != null)
 			return lazyEnergyHandler.cast();
 		
 		return super.getCapability(capability, side);

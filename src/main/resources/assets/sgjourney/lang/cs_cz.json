@@ -1,15 +1,26 @@
 {
 	"block.sgjourney.naquadah_ore": "Naquadahová ruda",
+	"block.sgjourney.naquadria_ore": "Naquadria Ore",
+	"block.sgjourney.trinium_ore": "Trinium Ore",
 	"block.sgjourney.nether_naquadah_ore": "Netherová naquadahová ruda",
-	"block.sgjourney.deepslate_naquadah_ore": "Hlubinná Naquadahová ruda",
+	"block.sgjourney.nether_naquadria_ore": "Netherová naquadriová ruda",
+	"block.sgjourney.nether_trinium_ore": "Netherová triniová ruda",
+	"block.sgjourney.deepslate_naquadah_ore": "Hlubinná naquadahová ruda",
+	"block.sgjourney.deepslate_naquadria_ore": "Hlubinná naquadriová ruda",
+	"block.sgjourney.deepslate_trinium_ore": "Hlubinná triniová ruda",
 	"block.sgjourney.raw_naquadah_block": "Blok vytěženého naquadahu",
+	"block.sgjourney.raw_naquadria_block": "Blok vytěžené naquadrie",
+	"block.sgjourney.raw_trinium_block": "Blok vytěženého trinia",
 	"block.sgjourney.pure_naquadah_block": "Blok čistého naquadahu",
-	"block.sgjourney.naquadah_block": "Blok naquadahu",
-	"block.sgjourney.naquadah_stairs": "Naquadahové schody",
-	"block.sgjourney.naquadah_slab": "Naquadahový půblok",
-	"block.sgjourney.cut_naquadah_block": "Tepaný blok naquadahu",
-	"block.sgjourney.cut_naquadah_stairs": "Tepaný naquadahové schody",
-	"block.sgjourney.cut_naquadah_slab": "Tepaný naquadahový půlblok",
+	
+	"block.sgjourney.naquadah_iron_block": "Blok železo-naquadahové slitiny",
+	"block.sgjourney.trinium_block": "Block trinia",
+	"block.sgjourney.naquadah_iron_stairs": "Železo-naquadahové schody",
+	"block.sgjourney.naquadah_iron_slab": "Železo-naquadahový půblok",
+	"block.sgjourney.cut_naquadah_iron_block": "Tepaný blok železo-naquadahu",
+	"block.sgjourney.cut_naquadah_iron_stairs": "Tepané železo-naquadahové schody",
+	"block.sgjourney.cut_naquadah_iron_slab": "Tepaný železo-naquadahový půlblok",
+	
 	"block.sgjourney.fire_pit": "Ohniště",
 	"block.sgjourney.archeology_table": "Arheologický stůl",
 	"block.sgjourney.golden_idol": "Zlatá soška",
@@ -74,8 +85,8 @@
 	
 	"block.sgjourney.protected_permissions": "Chráněno: Nemáš dostatečné pravomoce",
 	
-	"block.sgjourney.transport_rings": "Transportní kruhy",
-	"block.sgjourney.ring_panel": "Ovládání kruhů",
+	"block.sgjourney.goauld_transport_rings": "Goa'uldské transportní kruhy",
+	"block.sgjourney.goauld_ring_panel": "Goa'uldské ovládání kruhů",
 	
 	"block.sgjourney.naquadah_generator_mark_i": "Naquadahový Generátor Mark I",
 	"block.sgjourney.naquadah_generator_mark_i.description.mode": "Shift + pravé kliknutí na blok pro aktivaci/deaktivaci",
@@ -129,16 +140,24 @@
 	"fluid_type.sgjourney.heavy_liquid_naquadah": "Těžký tekutý naquadah",
 	
 	"item.sgjourney.raw_naquadah": "Vytěžený naquadah",
-	"item.sgjourney.naquadah_alloy": "Naquadahová slitina",
-	"item.sgjourney.naquadah_alloy_nugget": "Naquadahový nuget",
+	"item.sgjourney.raw_naquadria": "Vytěžená naquadrie",
+	"item.sgjourney.raw_trinium": "Vytěžené trinium",
+	"item.sgjourney.naquadah_iron_mixture": "Směs železa a naquadahu",
+	"item.sgjourney.naquadah_iron_alloy": "Železo-naquadahová slitina",
+	"item.sgjourney.trinium_ingot": "Triniový ingot",
+	"item.sgjourney.naquadah_iron_nugget": "Železo-naquadahový nuget",
+	"item.sgjourney.trinium_nugget": "Triniový nuget",
 	"item.sgjourney.refined_naquadah": "Rafinovaný naquadah",
 	"item.sgjourney.pure_naquadah": "Čistý naquadah",
 	"item.sgjourney.naquadah": "Naquadah vojenské úrovně",
 	"item.sgjourney.liquid_naquadah_bucket": "Kbelík tekutého naquadahu",
 	"item.sgjourney.heavy_liquid_naquadah_bucket": "Kbelík těžkého tekutého naquadahu",
-	"item.sgjourney.vial": "Ampulka",
 	
-	"item.sgjourney.naquadah_rod": "Naquadahová tyč",
+	"item.sgjourney.vial": "Ampulka",
+	"item.sgjourney.trinium_arrow": "Triniový šíp",
+	
+	"item.sgjourney.naquadah_iron_rod": "Železo-naquadahová tyč",
+	"item.sgjourney.trinium_rod": "Triniová tyč",
 	"item.sgjourney.reaction_chamber": "Reakční komora",
 	"item.sgjourney.plasma_converter": "Plasmový převaděč",
 	
@@ -220,7 +239,7 @@
 	"item.sgjourney.golden_iris": "Zlatá iris",
 	"item.sgjourney.diamond_iris": "Diamantová iris",
 	"item.sgjourney.netherite_iris": "Netherititová iris",
-	"item.sgjourney.naquadah_alloy_iris": "Iris z naquadahové slitiny",
+	"item.sgjourney.naquadah_iron_alloy_iris": "Iris z železo-naquadahové slitiny",
 	"item.sgjourney.trinium_iris": "Triniová iris",
 	"item.sgjourney.bronze_iris": "Bronzová iris",
 	"item.sgjourney.steel_iris": "Ocelová iris",
@@ -255,6 +274,8 @@
 	
 	"sounds.sgjourney.dhd_enter" : "DHD zadáno",
 	"sounds.sgjourney.dhd_press" : "DHD zmáčknuto",
+	
+	"sounds.sgjourney.ring_panel_press" : "Ovládání kruhů zmáčknuto",
 	
 	"sounds.sgjourney.matok_fire" : "střela z tyčové zbraně",
 	"sounds.sgjourney.matok_attack" : "útok z tyčové zbraně",
@@ -548,13 +569,6 @@
 	"tooltip.sgjourney.local_point_of_origin": "Lokální výchozí bod",
 	"tooltip.sgjourney.dynamic_symbols": "Dynamické symboly",
 	
-	"tooltip.sgjourney.has_control_crystal": "Má ovládací krystal",
-	"tooltip.sgjourney.dhd.generates_energy_core": "Generuje energetické jádro",
-	"tooltip.sgjourney.dhd.description": "Zařízení pro ovládání hvězdných bran",
-	"tooltip.sgjourney.dhd.dialing_menu": "Pravé kliknutí na horní část otevře ovládací menu",
-	"tooltip.sgjourney.dhd.crystal_menu": "Pravé kliknutí na strany nebo shift + pravé kliknutí na horní část otevře krystalové menu",
-	"tooltip.sgjourney.address_table": "Tabulka adres",
-	
 	"tooltip.sgjourney.crystal.none": "-",
 	"tooltip.sgjourney.crystal.in_dhd": "V DHD:",
 	"tooltip.sgjourney.crystal.in_dhd.control.large": "Povolí bráně používat pokročilé nastavení",
@@ -570,6 +584,15 @@
 	"tooltip.sgjourney.call_forwarding_device.in_dhd": "V DHD:",
 	"tooltip.sgjourney.call_forwarding_device.info": "Povolí přesměrování spojení",
 	
+	"tooltip.sgjourney.ring_panel.crystal_slot.description": "Drží krystaly",
+	"tooltip.sgjourney.ring_panel.energy_slot.description": "Drží předměty dodávající energii",
+	
+	"tooltip.sgjourney.has_control_crystal": "Má ovládací krystal",
+	"tooltip.sgjourney.dhd.generates_energy_core": "Generuje energetické jádro",
+	"tooltip.sgjourney.dhd.description": "Zařízení pro ovládání hvězdných bran",
+	"tooltip.sgjourney.dhd.dialing_menu": "Pravé kliknutí na horní část otevře ovládací menu",
+	"tooltip.sgjourney.dhd.crystal_menu": "Pravé kliknutí na strany nebo shift + pravé kliknutí na horní část otevře krystalové menu",
+	"tooltip.sgjourney.address_table": "Tabulka adres",
 	"tooltip.sgjourney.dhd.advanced_protocols": "Pokročilé protokoly",
 	"tooltip.sgjourney.dhd.advanced_protocols.description": "Pokročilé protokoly ukončí spojení hvězdných bran, pokud se po 10 sekund nenajde poblíž žádný potenciální cestovatel",
 	"tooltip.sgjourney.dhd.advanced_protocols.description.usage": "Pro aktivaci pokročilých protokolů umísti velký ovládací krystal do prostředního slotu na krystaly v DHD",

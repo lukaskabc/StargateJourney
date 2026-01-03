@@ -331,14 +331,14 @@ public interface Stargate
 	 * @param doKawoosh Whether kawoosh should form when the connection is established (for instance, when Nox open the Stargate)
 	 * @return Time (in ticks) it takes the Stargate to engage its Chevrons and start establishing a wormhole (kawoosh is not included in this)
 	 */
-	int dialedEngageTime(MinecraftServer server, boolean doKawoosh);
+	int dialedEngageTime(MinecraftServer server, boolean doKawoosh); //TODO Make the network wait
 	
 	/**
 	 * @param server Current Minecraft Server
 	 * @param doKawoosh Whether kawoosh should form when the connection is established (for instance, when Nox open the Stargate)
 	 * @return Time (in ticks) it takes the Stargate to establish wormhole (basically, how long before kawoosh is over and the Stargate can be safely used)
 	 */
-	int wormholeEstablishTime(MinecraftServer server, boolean doKawoosh);
+	int wormholeEstablishTime(MinecraftServer server, boolean doKawoosh); //TODO Make the network wait
 	
 	/**
 	 * Checks if this Stargate can connect to the dialing Stargate and creates a Stargate Connection

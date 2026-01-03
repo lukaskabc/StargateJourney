@@ -9,7 +9,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -43,7 +42,7 @@ public class TransportRingsEntity extends AbstractTransporterEntity
 	
 	public TransportRingsEntity(BlockPos pos, BlockState state) 
 	{
-		super(BlockEntityInit.TRANSPORT_RINGS.get(), pos, state);
+		super(BlockEntityInit.GOAULD_TRANSPORT_RINGS.get(), pos, state);
 	}
 	
 	@Override
@@ -74,12 +73,6 @@ public class TransportRingsEntity extends AbstractTransporterEntity
 			transportHeight = tag.getInt(TRANSPORT_HEIGHT);
 			updateProgress(tag.getInt(PROGRESS));
 		}
-	}
-	
-	public void updateClient()
-	{
-		if(!level.isClientSide())
-			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
 	}
 
 	@Override
@@ -124,10 +117,8 @@ public class TransportRingsEntity extends AbstractTransporterEntity
 	{
 		Transporter transporter = getTransporter();
 		
-		if(transporter == null) //TODO Maybe some kind of feedback when it goes wrong?
-			return;
-		
-		TransporterNetwork.get(level).createConnection(level.getServer(), transporter, target);
+		if(transporter != null) //TODO Maybe some kind of feedback when it goes wrong?
+			TransporterNetwork.get(level).createConnection(level.getServer(), transporter, target);
 	}
 	
 	public boolean connectTransporter(UUID connectionID)
@@ -218,7 +209,7 @@ public class TransportRingsEntity extends AbstractTransporterEntity
 	{
 		BlockPos pos = this.getBlockPos();
 		BlockState state = this.level.getBlockState(pos);
-		if(state.is(BlockInit.TRANSPORT_RINGS.get()))
+		if(state.is(BlockInit.GOAULD_TRANSPORT_RINGS.get()))
 		{
 			return this.level.getBlockState(pos).getValue(TransportRingsBlock.ACTIVATED);
 		}
@@ -231,7 +222,7 @@ public class TransportRingsEntity extends AbstractTransporterEntity
 		BlockPos pos = this.getBlockPos();
 		BlockState state = this.level.getBlockState(pos);
 		
-		if(state.is(BlockInit.TRANSPORT_RINGS.get()))
+		if(state.is(BlockInit.GOAULD_TRANSPORT_RINGS.get()))
 			level.setBlock(pos, state.setValue(TransportRingsBlock.ACTIVATED, connected), 2);
 		
 		loadChunk(connected);
@@ -242,7 +233,7 @@ public class TransportRingsEntity extends AbstractTransporterEntity
 		BlockPos pos = this.getBlockPos();
 		BlockState state = this.level.getBlockState(pos);
 		
-		if(!state.is(BlockInit.TRANSPORT_RINGS.get()))
+		if(!state.is(BlockInit.GOAULD_TRANSPORT_RINGS.get()))
 			return 0;
 		
 		if(state.getValue(TransportRingsBlock.FACING) == Direction.DOWN)

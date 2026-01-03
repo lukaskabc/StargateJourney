@@ -1,5 +1,6 @@
 package net.povstalec.sgjourney.common.sgjourney;
 
+import net.minecraft.nbt.CompoundTag;
 import net.povstalec.sgjourney.StargateJourney;
 import net.povstalec.sgjourney.common.misc.ArrayHelper;
 
@@ -72,6 +73,11 @@ public abstract class TransporterID
 			return 0;
 		
 		return idArray[number];
+	}
+	
+	public void saveToCompoundTag(CompoundTag tag, String name)
+	{
+		tag.putIntArray(name, idArray);
 	}
 	
 	/**

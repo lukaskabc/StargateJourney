@@ -49,8 +49,6 @@ public interface Transporter
 		return server.getLevel(dimension);
 	}
 	
-	BlockPos getBlockPos(); //TODO Remove this
-	
 	/**
 	 * @param server Current Minecraft Server
 	 * @return Position vector of the Transporter's center or null if it doesn't have a position
@@ -83,6 +81,12 @@ public interface Transporter
 	 * @return Inner Radius of the Transporter or {@literal <= 0} if the Transporter doesn't have a real form
 	 */
 	double getInnerRadius();
+	
+	/**
+	 * @param frequency Frequency to be tested
+	 * @return True if the specified frequency is accepted by the Transporter, otherwise false
+	 */
+	boolean acceptsFrequency(int frequency);
 	
 	/**
 	 * Transforms the vector from an absolute coordinate system to a coordinate system relative to Transporter, where X is the direction which the Transporter is facing, Y is Transporter's up direction and Z is Transporter's right direction

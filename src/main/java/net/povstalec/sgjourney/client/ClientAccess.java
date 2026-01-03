@@ -6,26 +6,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.povstalec.sgjourney.client.screens.ArcheologistNotebookScreen;
 import net.povstalec.sgjourney.client.screens.DialerScreen;
 import net.povstalec.sgjourney.client.screens.GDOScreen;
-import net.povstalec.sgjourney.common.block_entities.dhd.AbstractDHDEntity;
-import net.povstalec.sgjourney.common.block_entities.stargate.*;
-import net.povstalec.sgjourney.common.block_entities.tech.*;
-import net.povstalec.sgjourney.common.block_entities.tech_interface.AbstractInterfaceEntity;
-import net.povstalec.sgjourney.common.block_entities.transporter.RingPanelEntity;
-import net.povstalec.sgjourney.common.block_entities.transporter.TransportRingsEntity;
 import net.povstalec.sgjourney.common.blocks.stargate.AbstractStargateBlock;
 import net.povstalec.sgjourney.common.blockstates.Orientation;
 import net.povstalec.sgjourney.common.blockstates.StargatePart;
-import net.povstalec.sgjourney.common.sgjourney.Address;
-import net.povstalec.sgjourney.common.sgjourney.StargateConnection;
-import net.povstalec.sgjourney.common.sgjourney.info.IrisInfo;
 
 public class ClientAccess
 {
@@ -44,17 +31,6 @@ public class ClientAccess
 	public static void openGDOScreen(UUID playerId, boolean mainHand, String idc, int frequency)
 	{
 		minecraft.setScreen(new GDOScreen(playerId, mainHand, idc, frequency));
-	}
-	
-	public static void updateRingPanel(BlockPos pos, ArrayList<BlockPos> ringsPos, ArrayList<Component> ringsName)
-	{
-		final BlockEntity blockEntity = minecraft.level.getBlockEntity(pos);
-		
-		if(blockEntity instanceof final RingPanelEntity panel)
-		{
-			panel.ringsPos = ringsPos;
-			panel.ringsName = ringsName;
-		}
 	}
 	
 	public static void spawnStargateParticles(BlockPos pos, HashMap<StargatePart, BlockState> blockStates)

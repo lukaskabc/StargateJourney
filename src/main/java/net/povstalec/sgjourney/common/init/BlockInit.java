@@ -112,10 +112,10 @@ public class BlockInit
 					.requiresCorrectToolForDrops().noOcclusion().noCollission()
 					.lightLevel((state) -> state.getValue(FirePitBlock.LIT) ? 7 : 0)), Rarity.UNCOMMON, 16);
 	
-	public static final RegistryObject<TransportRingsBlock> TRANSPORT_RINGS = registerTransporterBlock("transport_rings",
+	public static final RegistryObject<TransportRingsBlock> GOAULD_TRANSPORT_RINGS = registerTransporterBlock("goauld_transport_rings",
 			() -> new TransportRingsBlock(BlockBehaviour.Properties.of(Material.METAL).strength(6.0F)
 					.sound(SoundType.METAL).noOcclusion()), Rarity.RARE);
-	public static final RegistryObject<RingPanelBlock> RING_PANEL = registerBlock("ring_panel",
+	public static final RegistryObject<RingPanelBlock> GOAULD_RING_PANEL = registerBlock("goauld_ring_panel",
 			() -> new RingPanelBlock(BlockBehaviour.Properties.of(Material.METAL).strength(6.0F)
 					.sound(SoundType.METAL).noOcclusion()), Rarity.RARE, 1);
 	
@@ -134,36 +134,56 @@ public class BlockInit
 	public static final RegistryObject<UnityClusterBlock> UNITY_CLUSTER = registerBlock("unity_cluster",
 			() -> new UnityClusterBlock(7, 3, BlockBehaviour.Properties.of(Material.AMETHYST, MaterialColor.DIAMOND).strength(1.5F).sound(SoundType.GLASS).requiresCorrectToolForDrops()));
 	
+	// Ores
 	public static final RegistryObject<ExplosiveBlock> NAQUADAH_ORE = registerBlock("naquadah_ore", 
 			() -> new ExplosiveBlock(BlockBehaviour.Properties.of(Material.STONE).strength(3.0F).requiresCorrectToolForDrops(), 4.0F));
 	public static final RegistryObject<ExplosiveBlock> NETHER_NAQUADAH_ORE = registerBlock("nether_naquadah_ore", 
 			() -> new ExplosiveBlock(BlockBehaviour.Properties.of(Material.STONE).strength(3.0F).requiresCorrectToolForDrops(), 4.0F));
 	public static final RegistryObject<ExplosiveBlock> DEEPSLATE_NAQUADAH_ORE = registerBlock("deepslate_naquadah_ore", 
 			() -> new ExplosiveBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.DEEPSLATE).strength(4.5F, 3.0F).requiresCorrectToolForDrops(), 4.0F));
+	public static final RegistryObject<ExplosiveBlock> NAQUADRIA_ORE = registerBlock("naquadria_ore",
+			() -> new ExplosiveBlock(BlockBehaviour.Properties.of(Material.STONE).strength(3.0F).requiresCorrectToolForDrops(), 4.0F));
+	public static final RegistryObject<ExplosiveBlock> NETHER_NAQUADRIA_ORE = registerBlock("nether_naquadria_ore",
+			() -> new ExplosiveBlock(BlockBehaviour.Properties.of(Material.STONE).strength(3.0F).requiresCorrectToolForDrops(), 4.0F));
+	public static final RegistryObject<ExplosiveBlock> DEEPSLATE_NAQUADRIA_ORE = registerBlock("deepslate_naquadria_ore",
+			() -> new ExplosiveBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.DEEPSLATE).strength(4.5F, 3.0F).requiresCorrectToolForDrops(), 4.0F));
+	public static final RegistryObject<ExplosiveBlock> TRINIUM_ORE = registerBlock("trinium_ore",
+			() -> new ExplosiveBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.DEEPSLATE).strength(4.5F, 3.0F).requiresCorrectToolForDrops(), 4.0F));
+	public static final RegistryObject<ExplosiveBlock> NETHER_TRINIUM_ORE = registerBlock("nether_trinium_ore",
+			() -> new ExplosiveBlock(BlockBehaviour.Properties.of(Material.STONE).strength(3.0F).requiresCorrectToolForDrops(), 4.0F));
+	public static final RegistryObject<ExplosiveBlock> DEEPSLATE_TRINIUM_ORE = registerBlock("deepslate_trinium_ore",
+			() -> new ExplosiveBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.DEEPSLATE).strength(4.5F, 3.0F).requiresCorrectToolForDrops(), 4.0F));
 	
 	public static final RegistryObject<ExplosiveBlock> RAW_NAQUADAH_BLOCK = registerBlock("raw_naquadah_block", 
 			() -> new ExplosiveBlock(BlockBehaviour.Properties.of(Material.STONE).strength(5.0F, 6.0F).requiresCorrectToolForDrops(), 10.0F));
 	public static final RegistryObject<ExplosiveBlock> PURE_NAQUADAH_BLOCK = registerBlock("pure_naquadah_block",
 			() -> new ExplosiveBlock(BlockBehaviour.Properties.of(Material.STONE).strength(5.0F, 6.0F).requiresCorrectToolForDrops(), 20.0F), Rarity.UNCOMMON, 64);
+	public static final RegistryObject<ExplosiveBlock> RAW_NAQUADRIA_BLOCK = registerBlock("raw_naquadria_block",
+			() -> new ExplosiveBlock(BlockBehaviour.Properties.of(Material.STONE).strength(5.0F, 6.0F).requiresCorrectToolForDrops(), 10.0F));
+	public static final RegistryObject<ExplosiveBlock> RAW_TRINIUM_BLOCK = registerBlock("raw_trinium_block",
+			() -> new ExplosiveBlock(BlockBehaviour.Properties.of(Material.STONE).strength(5.0F, 6.0F).requiresCorrectToolForDrops(), 10.0F));
 	
 	public static final RegistryObject<LiquidBlock> LIQUID_NAQUADAH_BLOCK = registerBlock("liquid_naquadah", 
 			() -> new LiquidBlock(FluidInit.LIQUID_NAQUADAH_SOURCE, BlockBehaviour.Properties.of(Material.WATER).noCollission().strength(100.0F).noLootTable()));
 	public static final RegistryObject<LiquidBlock> HEAVY_LIQUID_NAQUADAH_BLOCK = registerBlock("heavy_liquid_naquadah", 
 			() -> new LiquidBlock(FluidInit.HEAVY_LIQUID_NAQUADAH_SOURCE, BlockBehaviour.Properties.of(Material.WATER).noCollission().strength(100.0F).noLootTable()));
 	
-	public static final RegistryObject<Block> NAQUADAH_BLOCK = registerBlock("naquadah_block", 
+	public static final RegistryObject<Block> NAQUADAH_IRON_BLOCK = registerBlock("naquadah_iron_block",
 			() -> new Block(BlockBehaviour.Properties.of(Material.METAL).strength(5.0F, 9.0F).requiresCorrectToolForDrops()));
-	public static final RegistryObject<Block> NAQUADAH_STAIRS = registerBlock("naquadah_stairs", 
-			() -> new StairBlock(() -> NAQUADAH_BLOCK.get().defaultBlockState(), BlockBehaviour.Properties.of(Material.METAL).strength(5.0F, 9.0F).requiresCorrectToolForDrops()));
-	public static final RegistryObject<Block> NAQUADAH_SLAB = registerBlock("naquadah_slab", 
+	public static final RegistryObject<Block> NAQUADAH_IRON_STAIRS = registerBlock("naquadah_iron_stairs",
+			() -> new StairBlock(() -> NAQUADAH_IRON_BLOCK.get().defaultBlockState(), BlockBehaviour.Properties.of(Material.METAL).strength(5.0F, 9.0F).requiresCorrectToolForDrops()));
+	public static final RegistryObject<Block> NAQUADAH_IRON_SLAB = registerBlock("naquadah_iron_slab",
 			() -> new SlabBlock(BlockBehaviour.Properties.of(Material.METAL).strength(5.0F, 9.0F).requiresCorrectToolForDrops()));
 	
-	public static final RegistryObject<Block> CUT_NAQUADAH_BLOCK = registerBlock("cut_naquadah_block", 
+	public static final RegistryObject<Block> CUT_NAQUADAH_IRON_BLOCK = registerBlock("cut_naquadah_iron_block",
 			() -> new RotatedPillarBlock(BlockBehaviour.Properties.of(Material.METAL).strength(5.0F, 9.0F).requiresCorrectToolForDrops()));
-	public static final RegistryObject<Block> CUT_NAQUADAH_STAIRS = registerBlock("cut_naquadah_stairs", 
-			() -> new StairBlock(() -> NAQUADAH_BLOCK.get().defaultBlockState(), BlockBehaviour.Properties.of(Material.METAL).strength(5.0F, 9.0F).requiresCorrectToolForDrops()));
-	public static final RegistryObject<Block> CUT_NAQUADAH_SLAB = registerBlock("cut_naquadah_slab", 
+	public static final RegistryObject<Block> CUT_NAQUADAH_IRON_STAIRS = registerBlock("cut_naquadah_iron_stairs",
+			() -> new StairBlock(() -> NAQUADAH_IRON_BLOCK.get().defaultBlockState(), BlockBehaviour.Properties.of(Material.METAL).strength(5.0F, 9.0F).requiresCorrectToolForDrops()));
+	public static final RegistryObject<Block> CUT_NAQUADAH_IRON_SLAB = registerBlock("cut_naquadah_iron_slab",
 			() -> new SlabBlock(BlockBehaviour.Properties.of(Material.METAL).strength(5.0F, 9.0F).requiresCorrectToolForDrops()));
+	
+	public static final RegistryObject<Block> TRINIUM_BLOCK = registerBlock("trinium_block",
+			() -> new Block(BlockBehaviour.Properties.of(Material.METAL).strength(5.0F, 9.0F).requiresCorrectToolForDrops()));
 	
 	public static final RegistryObject<GoldenIdolBlock> GOLDEN_IDOL = registerBlock("golden_idol", 
 			() -> new GoldenIdolBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.GOLD).strength(3.0F, 6.0F)
@@ -175,7 +195,7 @@ public class BlockInit
 					.noOcclusion()));
 	
 	public static final RegistryObject<FirePitBlock> FIRE_PIT = registerBlock("fire_pit", 
-			() -> new FirePitBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.TERRACOTTA_ORANGE).instabreak()
+			() -> new FirePitBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.TERRACOTTA_ORANGE).instabreak()
 			.sound(SoundType.STONE).lightLevel((state) -> state.getValue(FirePitBlock.LIT) ? 15 : 0), ParticleTypes.FLAME));
 	
 	public static final RegistryObject<Block> SANDSTONE_WITH_LAPIS = registerBlock("sandstone_with_lapis",

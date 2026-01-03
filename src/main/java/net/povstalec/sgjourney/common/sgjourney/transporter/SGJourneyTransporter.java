@@ -98,6 +98,11 @@ public class SGJourneyTransporter implements Transporter
 		return INNER_RADIUS;
 	}
 	
+	public boolean acceptsFrequency(int frequency)
+	{
+		return true; // TODO Add frequency logic
+	}
+	
 	@Override
 	@Nullable
 	public Vec3 transportPos(MinecraftServer server)

@@ -19,6 +19,7 @@ import net.povstalec.sgjourney.common.events.custom.SGJourneyEvents;
 import net.povstalec.sgjourney.common.sgjourney.stargate.Stargate;
 
 import javax.annotation.Nullable;
+import javax.xml.transform.Result;
 
 public class StargateConnection
 {
@@ -27,7 +28,7 @@ public class StargateConnection
 	public static final String EVENT_OUTGOING_WORMHOLE = "stargate_outgoing_wormhole";
 	public static final String EVENT_DISCONNECTED = "stargate_disconnected";
 	
-	public static final String ADDRESS = "address";
+	public static final String ADDRESS = Address.ADDRESS;
 	public static final String DIMENSION = "Dimension";
 	public static final String COORDINATES = "Coordinates";
 	
@@ -569,5 +570,49 @@ public class StargateConnection
 	private static Stargate deserializeStargate(MinecraftServer server, CompoundTag stargateInfo)
 	{
 		return BlockEntityList.get(server).getStargate(new Address.Immutable(stargateInfo.getIntArray(ADDRESS)));
+	}
+	
+	
+	
+	public static class Result
+	{
+		public static final String FEEDBACK = "feedback";
+		
+		protected Address address;
+		protected StargateInfo.Feedback feedback;
+		
+		public Result() {}
+		
+		public Result(Address address, StargateInfo.Feedback feedback)
+		{
+			this.address = address;
+			this.feedback = feedback;
+		}
+		
+		public Address address()
+		{
+			return address;
+		}
+		
+		public StargateInfo.Feedback feedback()
+		{
+			return feedback;
+		}
+		
+		public CompoundTag save()
+		{
+			CompoundTag tag = new CompoundTag();
+			
+			address.saveToCompoundTag(tag, ADDRESS);
+			tag.putInt(FEEDBACK, feedback.ordinal());
+			
+			return tag;
+		}
+		
+		public void load(CompoundTag tag)
+		{
+			address = new Address.Immutable(tag.getIntArray(ADDRESS));
+			feedback = StargateInfo.Feedback.fromOrdinal(tag.getInt(FEEDBACK));
+		}
 	}
 }

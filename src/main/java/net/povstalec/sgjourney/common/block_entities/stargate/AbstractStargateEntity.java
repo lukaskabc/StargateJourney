@@ -358,17 +358,15 @@ public abstract class AbstractStargateEntity extends EnergyBlockEntity implement
 		
 		tag.putIntArray(ADDRESS, address.getArray());
 		tag.putIntArray(ENGAGED_CHEVRONS, engagedChevrons);
+		
+		tag.putString(VARIANT, variant.toString());
 		// Ticks
 		tag.putInt(StargateConnection.KAWOOSH_TICKS, kawooshTick);
 		tag.putInt(StargateConnection.OPEN_TIME, openTime);
 		tag.putInt(StargateConnection.TIME_SINCE_LAST_TRAVELER, timeSinceLastTraveler);
 		
 		tag.putByte(CONNECTION_STATE, connectionState.byteValue());
-		if(blockCover.isDirty())
-		{
-			tag.put(COVER_BLOCKS, blockCover.serializeNBT());
-			blockCover.setDirty(false);
-		}
+		tag.put(COVER_BLOCKS, blockCover.serializeNBT());
 		
 		return tag;
 	}
@@ -379,7 +377,7 @@ public abstract class AbstractStargateEntity extends EnergyBlockEntity implement
 		CompoundTag tag = packet.getTag();
 		if(tag != null)
 		{
-			ENERGY_STORAGE.setEnergy(tag.getLong(ENERGY));
+			energyStorage.setEnergy(tag.getLong(ENERGY));
 			
 			address.fromArray(tag.getIntArray(ADDRESS));
 			engagedChevrons = tag.getIntArray(ENGAGED_CHEVRONS);
@@ -391,8 +389,7 @@ public abstract class AbstractStargateEntity extends EnergyBlockEntity implement
 			timeSinceLastTraveler = tag.getInt(StargateConnection.TIME_SINCE_LAST_TRAVELER);
 			
 			connectionState = StargateConnection.State.fromByte(tag.getByte(CONNECTION_STATE));
-			if(tag.contains(COVER_BLOCKS))
-				blockCover.deserializeNBT(tag.getCompound(COVER_BLOCKS));
+			blockCover.deserializeNBT(tag.getCompound(COVER_BLOCKS));
 		}
 	}
 	
@@ -1459,17 +1456,6 @@ public abstract class AbstractStargateEntity extends EnergyBlockEntity implement
 		wormholeCandidates = getLevel().getEntitiesOfClass(Entity.class, localBox, entity -> entity.isAlive() && !entity.getType().is(TagInit.Entities.WORMHOLE_IGNORES));
 		
 		return wormholeCandidates;
-	}
-	
-	public boolean updateClient()
-	{
-		if(level.isClientSide())
-			return false;
-		
-		((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
-		
-		//PacketHandlerInit.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.worldPosition)), new ClientboundStargateUpdatePacket(this.worldPosition, this.getEnergyStored(), this.openTime, this.timeSinceLastTraveler, this.address.getArray(), this.engagedChevrons, this.kawooshTick, this.animationTick, (short) 0, symbolInfo().pointOfOrigin(), symbolInfo().symbols(), this.variant, ItemStack.EMPTY));
-		return true;
 	}
 	
 	public void spawnCoverParticles()

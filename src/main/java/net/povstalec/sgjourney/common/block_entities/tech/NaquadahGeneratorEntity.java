@@ -260,12 +260,6 @@ public abstract class NaquadahGeneratorEntity extends EnergyBlockEntity
 		this.reactionProgress++;
 	}
 	
-	public void updateClient()
-	{
-		if(!level.isClientSide())
-			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
-	}
-	
 	public static void tick(Level level, BlockPos pos, BlockState state, NaquadahGeneratorEntity generator)
 	{
 		if(level.isClientSide())

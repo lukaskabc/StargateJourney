@@ -18,7 +18,7 @@ public abstract class SGJourneyContainerScreen<T extends AbstractContainerMenu> 
 	
 	protected boolean hasItem(int slot)
 	{
-		return true;
+		return false;
 	}
 	
 	protected void itemHint(PoseStack poseStack, int mouseX, int mouseY, int hintTexturePosX, int hintTexturePosY, int slot)

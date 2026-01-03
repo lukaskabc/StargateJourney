@@ -132,12 +132,6 @@ public abstract class AbstractInterfaceEntity extends EnergyBlockEntity
 		return this.saveWithoutMetadata();
 	}
 	
-	public void updateClient()
-	{
-		if(!level.isClientSide())
-			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
-	}
-	
 	//============================================================================================
 	//****************************************Capabilities****************************************
 	//============================================================================================
@@ -281,10 +275,10 @@ public abstract class AbstractInterfaceEntity extends EnergyBlockEntity
 		
 		long needed = SGJourneyEnergy.energyToTarget(getEnergyTarget(), getEnergyBlockEntity().getEnergyStored(), this.maxExtract());
 		
-		long simulatedOutputAmount = ENERGY_STORAGE.extractLongEnergy(needed, true);
-		long simulatedReceiveAmount = getEnergyBlockEntity().ENERGY_STORAGE.receiveLongEnergy(simulatedOutputAmount, true);
-		ENERGY_STORAGE.extractLongEnergy(simulatedReceiveAmount, false);
-		getEnergyBlockEntity().ENERGY_STORAGE.receiveLongEnergy(simulatedReceiveAmount, false);
+		long simulatedOutputAmount = energyStorage.extractLongEnergy(needed, true);
+		long simulatedReceiveAmount = getEnergyBlockEntity().energyStorage.receiveLongEnergy(simulatedOutputAmount, true);
+		energyStorage.extractLongEnergy(simulatedReceiveAmount, false);
+		getEnergyBlockEntity().energyStorage.receiveLongEnergy(simulatedReceiveAmount, false);
 	}
 	
 	public long getEnergyTarget()

@@ -4,6 +4,8 @@ import javax.annotation.Nonnull;
 
 import net.povstalec.sgjourney.common.config.CommonPermissionConfig;
 import net.povstalec.sgjourney.common.sgjourney.Address;
+import net.povstalec.sgjourney.common.sgjourney.MemoryEntry;
+import net.povstalec.sgjourney.common.sgjourney.StargateConnection;
 import net.povstalec.sgjourney.common.sgjourney.StargateInfo;
 import org.jetbrains.annotations.NotNull;
 
@@ -90,7 +92,7 @@ public abstract class CrystalDHDEntity extends AbstractDHDEntity
 	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, Direction side)
 	{
 		if(capability == ForgeCapabilities.ITEM_HANDLER && (!isProtected() || CommonPermissionConfig.protected_inventory_access.get()))
-			return handler.cast();
+			return lazyEnergyItemHandler.cast();
 		
 		return super.getCapability(capability, side);
 	}
@@ -211,7 +213,7 @@ public abstract class CrystalDHDEntity extends AbstractDHDEntity
 		{
 			ItemStack stack = itemHandler.getStackInSlot(memoryCrystals.getCrystals()[0]);
 			if(stack.getItem() instanceof MemoryCrystalItem memoryCrystal)
-				memoryCrystal.saveAddress(stack, address, true);
+				memoryCrystal.saveMemoryEntry(stack, new MemoryEntry.StargateConnectionResult("", getLevel().getGameTime(), MemoryEntry.Type.ADDRESS, new StargateConnection.Result(address, feedback)), true);
 		}
 	}
 	

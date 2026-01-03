@@ -121,12 +121,6 @@ public abstract class BatteryBlockEntity extends EnergyBlockEntity
 		};
 	}
 	
-	public void updateClient()
-	{
-		if(!level.isClientSide())
-			((ServerLevel) level).getChunkSource().blockChanged(worldPosition);
-	}
-	
 	//============================================================================================
 	//******************************************Ticking*******************************************
 	//============================================================================================

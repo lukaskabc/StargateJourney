@@ -223,6 +223,14 @@ public class StargateInfo
 		{
 			return this == CONNECTION_ESTABLISHED_SYSTEM_WIDE || this == CONNECTION_ESTABLISHED_INTERSTELLAR || this == CONNECTION_ESTABLISHED_INTERGALACTIC;
 		}
+		
+		public static Feedback fromOrdinal(int ordinal)
+		{
+			if(ordinal < 0 || ordinal >= Feedback.values().length)
+				return NONE;
+			
+			return Feedback.values()[ordinal];
+		}
 	}
 	
 	private static Component createInfo(String feedback)

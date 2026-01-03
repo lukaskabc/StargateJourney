@@ -98,7 +98,7 @@ public class NaquadahGeneratorMarkIBlock extends NaquadahGeneratorBlock
 	public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player)
 	{
 		BlockEntity blockentity = level.getBlockEntity(pos);
-		if (blockentity instanceof NaquadahGeneratorEntity)
+		if(blockentity instanceof NaquadahGeneratorEntity)
 		{
 			if (!level.isClientSide && !player.isCreative())
 			{

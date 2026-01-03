@@ -39,18 +39,27 @@ public class TabInit
 			.displayItems((flag, items, hasPermisions) ->
 			{
 				items.accept(ItemInit.RAW_NAQUADAH.get());
-				items.accept(ItemInit.NAQUADAH_ALLOY.get());
-				items.accept(ItemInit.NAQUADAH_ALLOY_NUGGET.get());
+				items.accept(ItemInit.RAW_NAQUADRIA.get());
+				items.accept(ItemInit.RAW_TRINIUM.get());
+				
+				items.accept(ItemInit.NAQUADAH_IRON_MIXTURE.get());
+				items.accept(ItemInit.NAQUADAH_IRON_ALLOY.get());
+				items.accept(ItemInit.NAQUADAH_IRON_NUGGET.get());
 				items.accept(ItemInit.REFINED_NAQUADAH.get());
 				items.accept(ItemInit.PURE_NAQUADAH.get());
 				items.accept(ItemInit.NAQUADAH.get());
+				
+				items.accept(ItemInit.TRINIUM_INGOT.get());
+				items.accept(ItemInit.TRINIUM_NUGGET.get());
+				
 				items.accept(ItemInit.LIQUID_NAQUADAH_BUCKET.get());
 				items.accept(ItemInit.HEAVY_LIQUID_NAQUADAH_BUCKET.get());
 				items.accept(ItemInit.VIAL.get());
 				items.accept(VialItem.liquidNaquadahSetup());
 				items.accept(VialItem.heavyLiquidNaquadahSetup());
 
-				items.accept(ItemInit.NAQUADAH_ROD.get());
+				items.accept(ItemInit.NAQUADAH_IRON_ROD.get());
+				items.accept(ItemInit.TRINIUM_ROD.get());
 				items.accept(ItemInit.REACTION_CHAMBER.get());
 				items.accept(ItemInit.NAQUADAH_GENERATOR_CORE.get());
 				items.accept(NaquadahFuelRodItem.fuelRodSetup());
@@ -76,6 +85,8 @@ public class TabInit
 				items.accept(ItemInit.NAQUADAH_CHESTPLATE.get());
 				items.accept(ItemInit.NAQUADAH_LEGGINGS.get());
 				items.accept(ItemInit.NAQUADAH_BOOTS.get());
+				
+				items.accept(ItemInit.TRINIUM_ARROW.get());
 				
 				items.accept(ItemInit.KARA_KESH.get());
 				items.accept(ItemInit.RING_REMOTE.get());
@@ -171,8 +182,8 @@ public class TabInit
 				items.accept(ItemInit.DIAMOND_IRIS.get());
 				items.accept(ItemInit.NETHERITE_IRIS.get());
 
-				items.accept(ItemInit.NAQUADAH_ALLOY_IRIS.get());
-				//items.accept(ItemInit.TRINIUM_IRIS.get());
+				items.accept(ItemInit.NAQUADAH_IRON_IRIS.get());
+				items.accept(ItemInit.TRINIUM_IRIS.get());
 
 				items.accept(ItemInit.BRONZE_IRIS.get());
 				items.accept(ItemInit.STEEL_IRIS.get());
@@ -201,13 +212,13 @@ public class TabInit
 		event.registerCreativeModeTab(STARGATE_BLOCKS, (builder) ->
 		{
 			builder.title(Component.translatable("itemGroup.stargate_blocks"))
-			.icon(() -> new ItemStack(BlockInit.NAQUADAH_BLOCK.get()))
+			.icon(() -> new ItemStack(BlockInit.NAQUADAH_IRON_BLOCK.get()))
 			.displayItems((flag, items, hasPermisions) ->
 			{
 				items.accept(BlockInit.UNIVERSE_STARGATE_CHEVRON.get());
 				
-				items.accept(BlockInit.TRANSPORT_RINGS.get());
-				items.accept(BlockInit.RING_PANEL.get());
+				items.accept(BlockInit.GOAULD_TRANSPORT_RINGS.get());
+				items.accept(BlockInit.GOAULD_RING_PANEL.get());
 				
 				items.accept(BlockInit.ARCHEOLOGY_TABLE.get());
 				items.accept(BlockInit.GOLDEN_IDOL.get());
@@ -222,15 +233,26 @@ public class TabInit
 				items.accept(BlockInit.NAQUADAH_ORE.get());
 				items.accept(BlockInit.DEEPSLATE_NAQUADAH_ORE.get());
 				items.accept(BlockInit.NETHER_NAQUADAH_ORE.get());
+				items.accept(BlockInit.NAQUADRIA_ORE.get());
+				items.accept(BlockInit.DEEPSLATE_NAQUADRIA_ORE.get());
+				items.accept(BlockInit.NETHER_NAQUADRIA_ORE.get());
+				items.accept(BlockInit.TRINIUM_ORE.get());
+				items.accept(BlockInit.DEEPSLATE_TRINIUM_ORE.get());
+				items.accept(BlockInit.NETHER_TRINIUM_ORE.get());
+				
 				items.accept(BlockInit.RAW_NAQUADAH_BLOCK.get());
 				items.accept(BlockInit.PURE_NAQUADAH_BLOCK.get());
+				items.accept(BlockInit.RAW_NAQUADRIA_BLOCK.get());
+				items.accept(BlockInit.RAW_TRINIUM_BLOCK.get());
 				
-				items.accept(BlockInit.NAQUADAH_BLOCK.get());
-				items.accept(BlockInit.NAQUADAH_STAIRS.get());
-				items.accept(BlockInit.NAQUADAH_SLAB.get());
-				items.accept(BlockInit.CUT_NAQUADAH_BLOCK.get());
-				items.accept(BlockInit.CUT_NAQUADAH_STAIRS.get());
-				items.accept(BlockInit.CUT_NAQUADAH_SLAB.get());
+				items.accept(BlockInit.NAQUADAH_IRON_BLOCK.get());
+				items.accept(BlockInit.NAQUADAH_IRON_STAIRS.get());
+				items.accept(BlockInit.NAQUADAH_IRON_SLAB.get());
+				items.accept(BlockInit.CUT_NAQUADAH_IRON_BLOCK.get());
+				items.accept(BlockInit.CUT_NAQUADAH_IRON_STAIRS.get());
+				items.accept(BlockInit.CUT_NAQUADAH_IRON_SLAB.get());
+				
+				items.accept(BlockInit.TRINIUM_BLOCK.get());
 				
 				items.accept(BlockInit.SANDSTONE_HIEROGLYPHS.get());
 				items.accept(BlockInit.SANDSTONE_SWITCH.get());
@@ -256,6 +278,7 @@ public class TabInit
 				items.accept(BlockInit.CRYSTALLIZER.get());
 				items.accept(BlockInit.ADVANCED_CRYSTALLIZER.get());
 
+				items.accept(BlockInit.NAQUADAH_REACTOR.get());
 				items.accept(BlockInit.NAQUADAH_GENERATOR_MARK_I.get());
 				items.accept(BlockInit.NAQUADAH_GENERATOR_MARK_II.get());
 				
@@ -293,7 +316,7 @@ public class TabInit
 			event.accept(ClassicDHDBlock.generatedDHD(), CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
 			event.accept(InventoryUtil.generationStep(new ItemStack(BlockInit.TOLLAN_STARGATE.get()), StructureGenEntity.Step.SETUP), CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
 			
-			event.accept(InventoryUtil.generationStep(new ItemStack(BlockInit.TRANSPORT_RINGS.get()), StructureGenEntity.Step.SETUP), CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
+			event.accept(InventoryUtil.generationStep(new ItemStack(BlockInit.GOAULD_TRANSPORT_RINGS.get()), StructureGenEntity.Step.SETUP), CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
 		}
 	}
 }

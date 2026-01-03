@@ -59,7 +59,7 @@ public abstract class AbstractTransporterBlock extends BaseEntityBlock
 		{
 			if(!level.isClientSide() && !player.isCreative())
 			{
-				ItemStack itemstack = new ItemStack(BlockInit.TRANSPORT_RINGS.get());
+				ItemStack itemstack = new ItemStack(BlockInit.GOAULD_TRANSPORT_RINGS.get());
 				
 				blockentity.saveToItem(itemstack);
 				if(transporter.hasCustomName())
