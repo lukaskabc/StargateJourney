@@ -23,6 +23,8 @@ import net.povstalec.sgjourney.common.sgjourney.*;
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class SGJourneyStargate implements Stargate
 {
@@ -589,30 +591,31 @@ public class SGJourneyStargate implements Stargate
 	
 	
 	
-	public interface StargateConsumer<S extends AbstractStargateEntity>
+	private void stargateRun(MinecraftServer server, Consumer<AbstractStargateEntity> consumer)
 	{
-		void run(S stargate);
+		server.executeIfPossible(() ->
+		{
+			AbstractStargateEntity stargate = getStargateEntity(server);
+			
+			if(stargate != null)
+				consumer.accept(stargate);
+		});
 	}
 	
-	public interface ReturnStargateConsumer<T, S extends AbstractStargateEntity>
+	private <T> T stargateReturn(MinecraftServer server, Function<AbstractStargateEntity, T> function, @Nullable T defaultValue)
 	{
-		T run(S stargate);
-	}
-	
-	private void stargateRun(MinecraftServer server, StargateConsumer<AbstractStargateEntity> consumer)
-	{
-		AbstractStargateEntity stargate = getStargateEntity(server);
+		Object[] arr = { null };
 		
-		if(stargate != null)
-			consumer.run(stargate);
-	}
-	
-	private <T> T stargateReturn(MinecraftServer server, ReturnStargateConsumer<T, AbstractStargateEntity> consumer, @Nullable T defaultValue)
-	{
-		AbstractStargateEntity stargate = getStargateEntity(server);
+		server.executeIfPossible(() ->
+		{
+			AbstractStargateEntity stargate = getStargateEntity(server);
+			
+			if(stargate != null)
+				arr[0] = function.apply(stargate);
+		});
 		
-		if(stargate != null)
-			return consumer.run(stargate);
+		if(arr[0] != null)
+			return (T) arr[0];
 		
 		return defaultValue;
 	}

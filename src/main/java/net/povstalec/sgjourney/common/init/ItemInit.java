@@ -27,6 +27,12 @@ public class ItemInit
 	// Materials
 	public static final RegistryObject<Item> RAW_NAQUADAH = ITEMS.register("raw_naquadah", 
 			() -> new Item(new Item.Properties().fireResistant()));
+	public static final RegistryObject<Item> NAQUADAH_COPPER_MIXTURE = ITEMS.register("naquadah_copper_mixture",
+			() -> new Item(new Item.Properties().fireResistant()));
+	public static final RegistryObject<Item> NAQUADAH_COPPER_ALLOY = ITEMS.register("naquadah_copper_alloy",
+			() -> new Item(new Item.Properties().fireResistant()));
+	public static final RegistryObject<Item> NAQUADAH_COPPER_NUGGET = ITEMS.register("naquadah_copper_nugget",
+			() -> new Item(new Item.Properties().fireResistant()));
 	public static final RegistryObject<Item> NAQUADAH_IRON_MIXTURE = ITEMS.register("naquadah_iron_mixture",
 			() -> new Item(new Item.Properties().fireResistant()));
 	public static final RegistryObject<Item> NAQUADAH_IRON_ALLOY = ITEMS.register("naquadah_iron_alloy",
@@ -55,6 +61,8 @@ public class ItemInit
 	
 	// Crafting Items
 	public static final RegistryObject<Item> NAQUADAH_IRON_ROD = ITEMS.register("naquadah_iron_rod",
+			() -> new Item(new Item.Properties().fireResistant()));
+	public static final RegistryObject<Item> NAQUADAH_COPPER_ROD = ITEMS.register("naquadah_copper_rod",
 			() -> new Item(new Item.Properties().fireResistant()));
 	public static final RegistryObject<Item> TRINIUM_ROD = ITEMS.register("trinium_rod",
 			() -> new Item(new Item.Properties()));

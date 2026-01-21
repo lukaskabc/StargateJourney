@@ -534,7 +534,7 @@ public abstract class AbstractStargateEntity extends EnergyBlockEntity implement
 			return resetStargate(StargateInfo.Feedback.INVALID_ADDRESS);
 		
 		growAddress(symbol);
-		chevronSound((short) getAddress().getLength(), incoming, false, encodeSound); //TODO Is this address length thing right?
+		chevronSound((short) getAddress().getLength(), incoming, false, encodeSound);
 		
 		if(!incoming)
 		{
@@ -779,10 +779,19 @@ public abstract class AbstractStargateEntity extends EnergyBlockEntity implement
 		dhdInfo().revalidateDHD();
 		
 		setChanged();
-		if(feedback == StargateInfo.Feedback.UNKNOWN_ERROR)
-			StargateJourney.LOGGER.error("Reset Stargate at " + this.getBlockPos().getX() + " " + this.getBlockPos().getY() + " " + this.getBlockPos().getZ() + " " + this.getLevel().dimension().location().toString() + " " + feedback.getMessage());
-		else
-			StargateJourney.LOGGER.debug("Reset Stargate at " + this.getBlockPos().getX() + " " + this.getBlockPos().getY() + " " + this.getBlockPos().getZ() + " " + this.getLevel().dimension().location().toString() + " " + feedback.getMessage());
+		try
+		{
+			if(feedback == StargateInfo.Feedback.UNKNOWN_ERROR)
+				throw new RuntimeException("Unknown Stargate Error");
+			else
+				StargateJourney.LOGGER.debug("Reset Stargate at " + this.getBlockPos().toShortString() + " " + this.getLevel().dimension().location() + " " + feedback.getMessage());
+		}
+		catch(RuntimeException e)
+		{
+			StargateJourney.LOGGER.error("Reset Stargate at " + this.getBlockPos().toShortString() + " " + this.getLevel().dimension().location() + " " + feedback.getMessage(), e);
+			return setRecentFeedback(feedback);
+		}
+		
 		return setRecentFeedback(feedback);
 	}
 	

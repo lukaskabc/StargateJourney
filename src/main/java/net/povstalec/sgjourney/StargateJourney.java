@@ -8,7 +8,7 @@ import net.povstalec.sgjourney.client.screens.*;
 import net.povstalec.sgjourney.common.config.ClientStargateConfig;
 import net.povstalec.sgjourney.common.entities.Jaffa;
 import net.povstalec.sgjourney.common.init.*;
-import net.povstalec.sgjourney.common.misc.Remapping;
+import net.povstalec.sgjourney.common.misc.RemappingHelper;
 import net.povstalec.sgjourney.common.misc.RenderAMD;
 import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
@@ -92,7 +92,7 @@ public class StargateJourney
     {
     	IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		
-		Remapping.setupRemapping();
+		RemappingHelper.setupRemapping();
     	
     	ItemInit.register(eventBus);
         BlockInit.register(eventBus);

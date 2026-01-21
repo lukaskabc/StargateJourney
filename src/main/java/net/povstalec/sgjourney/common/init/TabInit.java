@@ -42,6 +42,9 @@ public class TabInit
 				items.accept(ItemInit.RAW_NAQUADRIA.get());
 				items.accept(ItemInit.RAW_TRINIUM.get());
 				
+				items.accept(ItemInit.NAQUADAH_COPPER_MIXTURE.get());
+				items.accept(ItemInit.NAQUADAH_COPPER_ALLOY.get());
+				items.accept(ItemInit.NAQUADAH_COPPER_NUGGET.get());
 				items.accept(ItemInit.NAQUADAH_IRON_MIXTURE.get());
 				items.accept(ItemInit.NAQUADAH_IRON_ALLOY.get());
 				items.accept(ItemInit.NAQUADAH_IRON_NUGGET.get());
@@ -59,6 +62,7 @@ public class TabInit
 				items.accept(VialItem.heavyLiquidNaquadahSetup());
 
 				items.accept(ItemInit.NAQUADAH_IRON_ROD.get());
+				items.accept(ItemInit.NAQUADAH_COPPER_ROD.get());
 				items.accept(ItemInit.TRINIUM_ROD.get());
 				items.accept(ItemInit.REACTION_CHAMBER.get());
 				items.accept(ItemInit.NAQUADAH_GENERATOR_CORE.get());
@@ -244,6 +248,20 @@ public class TabInit
 				items.accept(BlockInit.PURE_NAQUADAH_BLOCK.get());
 				items.accept(BlockInit.RAW_NAQUADRIA_BLOCK.get());
 				items.accept(BlockInit.RAW_TRINIUM_BLOCK.get());
+				
+				items.accept(BlockInit.NAQUADAH_COPPER_BLOCK.get());
+				items.accept(BlockInit.EXPOSED_NAQUADAH_COPPER_BLOCK.get());
+				items.accept(BlockInit.WEATHERED_NAQUADAH_COPPER_BLOCK.get());
+				items.accept(BlockInit.OXIDIZED_NAQUADAH_COPPER_BLOCK.get());
+				items.accept(BlockInit.SMOOTH_NAQUADAH_COPPER_BLOCK.get());
+				items.accept(BlockInit.EXPOSED_SMOOTH_NAQUADAH_COPPER_BLOCK.get());
+				items.accept(BlockInit.WEATHERED_SMOOTH_NAQUADAH_COPPER_BLOCK.get());
+				items.accept(BlockInit.OXIDIZED_SMOOTH_NAQUADAH_COPPER_BLOCK.get());
+				
+				items.accept(BlockInit.NAQUADAH_COPPER_LAMP.get());
+				items.accept(BlockInit.EXPOSED_NAQUADAH_COPPER_LAMP.get());
+				items.accept(BlockInit.WEATHERED_NAQUADAH_COPPER_LAMP.get());
+				items.accept(BlockInit.OXIDIZED_NAQUADAH_COPPER_LAMP.get());
 				
 				items.accept(BlockInit.NAQUADAH_IRON_BLOCK.get());
 				items.accept(BlockInit.NAQUADAH_IRON_STAIRS.get());

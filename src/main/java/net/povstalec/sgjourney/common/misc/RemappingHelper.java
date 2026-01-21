@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class Remapping
+public class RemappingHelper
 {
 	private static final Map<ResourceLocation, Supplier<? extends Item>> OLD_ITEM_MAPPINGS = new HashMap<>();
 	private static final Map<ResourceLocation, Supplier<? extends Block>> OLD_BLOCK_MAPPINGS = new HashMap<>();
@@ -118,6 +118,9 @@ public class Remapping
 		remapBlock("cut_naquadah_block", BlockInit.CUT_NAQUADAH_IRON_BLOCK);
 		remapBlock("cut_naquadah_stairs", BlockInit.CUT_NAQUADAH_IRON_STAIRS);
 		remapBlock("cut_naquadah_slab", BlockInit.CUT_NAQUADAH_IRON_SLAB);
+		
+		// Naquadah-Iron Block -> Smooth Naquadah-Iron Block
+		// Cut Naquadah-Iron Block -> Naquadah-Iron Block
 		
 		// Items
 		remapItem("naquadah_alloy", ItemInit.NAQUADAH_IRON_ALLOY);
