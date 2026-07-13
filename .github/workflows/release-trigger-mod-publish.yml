@@ -25,6 +25,7 @@ jobs:
 
       # The tag with associated release dynamically pulled from the GitHub event payload
       release_tag: ${{ github.event.release.tag_name }}
+      dry_run: true
 
     secrets:
       CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
