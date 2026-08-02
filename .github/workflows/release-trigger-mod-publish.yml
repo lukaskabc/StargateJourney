@@ -23,15 +23,17 @@ jobs:
     # If a specific commit hash is used, improves security
     # The reference must be changed at TWO places                                     ↓ change this
     # v2.1.0
-    uses: lukaskabc/Minecraft-Mod-Publish-Workflows/.github/workflows/mod-publish.yml@14f5fd1e0ba5247143318b00f0029c6493624a14
+    uses: lukaskabc/Minecraft-Mod-Publish-Workflows/.github/workflows/mod-publish.yml@development
     with:
       # CHANGE THIS REFERENCE AS WELL
       # This value must match the reference used in the "uses:" parameter (the value after "@")
       # v2.1.0
-      workflow_ref: "14f5fd1e0ba5247143318b00f0029c6493624a14"
+      workflow_ref: "development"
 
       # The tag with associated release dynamically pulled from the GitHub event payload
       release_tag: ${{ github.event.release.tag_name }}
+      dry_run: true
+      sequential_publication: true
 
     secrets:
       CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
